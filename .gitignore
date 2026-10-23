@@ -1,0 +1,27 @@
+# Local/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local Firebase CLI state and debug logs
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Privileged credentials — never commit these
+.env
+.env.*
+!.env.example
+serviceAccountKey.json
+*-service-account*.json
+*service-account*.json
+
+# Personal exports and backups (may contain private notes)
+dsa-journey-*.json
+dsa-journey-*.csv
+dsa-pre-import-*.json
+*.private-backup.json

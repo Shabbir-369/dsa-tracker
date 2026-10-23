@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070b10">
+  <title>DSA Journey Tracker</title>
+  <style>
+    :root{--bg:#070b10;--panel:#0d131b;--panel2:#111a24;--panel3:#0a1017;--text:#f2f7fb;--muted:#8e9bad;--line:#1c2735;--line2:#2a394b;--accent:#67e8f9;--accent2:#22d3ee;--green:#4ade80;--yellow:#facc15;--red:#fb7185;--purple:#a78bfa;--orange:#fb923c;--shadow:0 22px 80px rgba(0,0,0,.32);--r:16px;--r2:12px;--font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(1200px 520px at 78% -10%,rgba(34,211,238,.09),transparent 58%),var(--bg);color:var(--text);font-family:var(--font)}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit}
+    .app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:rgba(7,11,16,.92);backdrop-filter:blur(18px);padding:20px 14px;display:flex;flex-direction:column;gap:18px;z-index:20}.brand{display:flex;gap:11px;align-items:center;padding:4px 8px 12px}.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:900;color:#03242a;background:linear-gradient(135deg,var(--accent),#0891b2)}.brand-title{font-weight:800;font-size:14px}.brand-sub{font-size:10px;color:var(--muted);margin-top:2px}.nav{display:grid;gap:6px}.nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--muted);text-align:left;font-size:12px}.nav-btn:hover{background:var(--panel3);color:var(--text)}.nav-btn.active{background:rgba(103,232,249,.08);border-color:rgba(103,232,249,.18);color:var(--accent)}.side-bottom{margin-top:auto;display:grid;gap:8px}.sync{padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--panel3);font-size:10px;color:var(--muted);line-height:1.45}.sync .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--yellow)}.sync.ok .dot{background:var(--green)}.uid-box{font:9px var(--mono);color:#6f7d8e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 3px}
+    main{min-width:0;padding:24px 28px 56px}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}.eyebrow{font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}.page-title{font-size:29px;line-height:1.08;margin:5px 0 7px}.subtle{font-size:12px;color:var(--muted);line-height:1.55}.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.btn{border:1px solid var(--line2);background:var(--panel2);color:var(--text);padding:9px 12px;border-radius:10px;font-weight:700;font-size:11px}.btn:hover{filter:brightness(1.08)}.btn.primary{background:linear-gradient(135deg,#22d3ee,#67e8f9);color:#03252b;border-color:transparent}.btn.ghost{background:transparent}.btn.danger{color:#fecdd3;background:rgba(251,113,133,.06);border-color:rgba(251,113,133,.24)}.btn.small{padding:7px 9px;font-size:10px}.btn.icon{width:30px;height:30px;padding:0;display:grid;place-items:center}.btn[disabled]{opacity:.45;cursor:not-allowed}.hidden{display:none !important}.view{display:none}.view.active{display:block}.grid{display:grid;gap:14px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.stat,.card{background:linear-gradient(180deg,rgba(13,19,27,.96),rgba(10,15,22,.96));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}.stat{padding:17px}.stat-k{font:9px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.stat-v{font-size:25px;font-weight:850;margin-top:6px}.stat-s{font-size:10px;color:var(--muted);margin-top:4px}.card{padding:16px}.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:13px}.card-title{font-size:13px;font-weight:800}.card-sub{font-size:10px;color:var(--muted);margin-top:3px}.section-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-top:14px}.toolbar{display:flex;gap:8px;flex-wrap:wrap}.control{background:var(--panel3);border:1px solid var(--line2);color:var(--text);border-radius:10px;padding:9px 10px;outline:0;font-size:11px}.control:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(103,232,249,.5);box-shadow:0 0 0 3px rgba(103,232,249,.08)}
+    .topic-list{display:grid;gap:10px}.drag-handle{cursor:grab;color:var(--muted);font-size:15px;line-height:1;padding:5px 7px;border:1px solid var(--line);border-radius:8px;background:var(--panel3);user-select:none}.drag-handle:active{cursor:grabbing}.dragging{opacity:.45}.drop-target{outline:1px dashed var(--accent);outline-offset:3px}.heat-wrap{overflow-x:auto}.heat-grid{display:grid;grid-template-columns:18px repeat(26,14px);grid-template-rows:repeat(7,14px);gap:3px;min-width:410px}.heat-grid .heat-cell{width:14px;height:14px;aspect-ratio:auto}.heat-day-label{font:9px var(--mono);color:var(--muted);display:flex;align-items:center}.heat-month-labels{display:grid;grid-template-columns:18px repeat(26,14px);gap:3px;min-width:410px;margin-bottom:4px;font:9px var(--mono);color:var(--muted)}.heat-month-labels span{white-space:nowrap}.json-editor{min-height:52vh;width:100%;resize:vertical;font:12px/1.6 var(--mono);tab-size:2}.json-status{font-size:10px;color:var(--muted);min-height:16px}.drop-zone{transition:.15s}.topic{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel3)}.topic-head{display:flex;align-items:center;gap:10px;padding:12px 13px}.topic-toggle{flex:1;min-width:0;display:flex;align-items:center;gap:9px;background:transparent;border:0;color:inherit;text-align:left;padding:0}.chev{font-size:12px;color:var(--muted);width:14px}.topic-name{font-weight:800;font-size:13px}.topic-meta{font:10px var(--mono);color:var(--muted)}.topic-actions,.sub-actions,.problem-actions{display:flex;gap:4px;flex-wrap:wrap}.topic-body{padding:0 12px 12px;border-top:1px solid var(--line)}.subtopic{margin-top:10px;border:1px solid var(--line);border-radius:11px;background:#0b1118;overflow:hidden}.sub-head{display:flex;align-items:center;gap:8px;padding:10px 11px}.sub-toggle{flex:1;border:0;background:transparent;color:inherit;text-align:left;padding:0;display:flex;align-items:center;gap:8px}.sub-name{font-size:12px;font-weight:750}.sub-count{font:9px var(--mono);color:var(--muted)}.problem-list{display:grid}.problem{display:flex;gap:10px;align-items:center;padding:9px 10px;border-top:1px solid rgba(28,39,53,.75)}.problem:first-child{border-top:0}.problem-info{min-width:0;flex:1}.problem-name{font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.problem-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.pill{font-size:9px;padding:3px 6px;border-radius:999px;border:1px solid var(--line2);background:rgba(255,255,255,.02);color:var(--muted);white-space:nowrap}.easy{color:#86efac;border-color:#14532d;background:#052013}.medium{color:#fde68a;border-color:#713f12;background:#241b07}.hard{color:#fda4af;border-color:#881337;background:#29080f}.st-not{color:var(--muted)}.st-attempt{color:#93c5fd;border-color:#1d4ed8;background:#09182e}.st-hint{color:#fde68a;border-color:#92400e;background:#281804}.st-solved{color:#86efac;border-color:#166534;background:#062315}.st-revisit{color:#c4b5fd;border-color:#6d28d9;background:#170a2c}
+    .progress{height:8px;border-radius:999px;overflow:hidden;border:1px solid var(--line);background:#081018}.progress > span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent2),var(--green))}.topic-progress{display:grid;gap:8px}.tp{display:grid;grid-template-columns:minmax(80px,115px) 1fr 48px;align-items:center;gap:8px;font-size:10px}.tp b{font:9px var(--mono);color:var(--muted);text-align:right}.heatmap{display:grid;grid-template-columns:repeat(26,minmax(8px,1fr));gap:3px}.heat-cell{aspect-ratio:1;border-radius:3px;background:#101823;border:1px solid #172230;cursor:pointer}.heat-cell.l1{background:#11323a}.heat-cell.l2{background:#15525e}.heat-cell.l3{background:#1b7787}.heat-cell.l4{background:#22b7c9}.heat-caption{font-size:9px;color:var(--muted);margin-top:8px}.week-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:115px}.bar-col{display:grid;gap:6px;align-items:end;text-align:center}.bar{height:84px;border:1px solid var(--line);border-radius:7px;background:#0a121a;display:flex;align-items:flex-end;overflow:hidden}.bar span{display:block;width:100%;background:linear-gradient(180deg,var(--accent),var(--accent2));min-height:2px}.bar-lab{font:9px var(--mono);color:var(--muted)}.revisit{display:grid;gap:8px}.revisit-item{border:1px solid var(--line);background:var(--panel3);border-radius:11px;padding:10px}.revisit-title{font-size:11px;font-weight:750}.revisit-sub{font-size:9px;color:var(--muted);margin-top:3px}.revisit-actions{margin-top:7px;display:flex;gap:5px}
+    .filters{display:grid;grid-template-columns:minmax(180px,1.8fr) repeat(6,minmax(105px,1fr));gap:7px;margin-bottom:12px}.filters .control{width:100%}.timeline{display:grid;gap:15px}.day-title{display:flex;gap:9px;align-items:center;font:9px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.day-title:after{content:"";flex:1;height:1px;background:var(--line)}.day-list{display:grid;gap:7px;margin-top:7px}.entry{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:start;border:1px solid var(--line);background:var(--panel3);border-radius:13px;padding:12px}.entry-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(103,232,249,.08);border:1px solid rgba(103,232,249,.16);color:var(--accent)}.entry-main{min-width:0}.entry-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.entry-title{font-size:12px;font-weight:800}.entry-path{font-size:9px;color:var(--muted);margin-top:4px}.entry-notes{font-size:10px;color:#b9c5d2;margin-top:6px;white-space:pre-wrap;overflow-wrap:anywhere}.entry-side{text-align:right;display:grid;justify-items:end;gap:5px}.duration{font:10px var(--mono);color:var(--accent)}.entry-actions{display:flex;gap:4px}.empty{padding:36px 16px;border:1px dashed var(--line2);border-radius:13px;text-align:center;color:var(--muted);font-size:11px}.toolbar-end{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+    .timer-card{display:grid;gap:16px}.timer-big{font:800 clamp(38px,7vw,68px) var(--mono);letter-spacing:.03em}.timer-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.active-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid rgba(103,232,249,.14);background:rgba(103,232,249,.05);border-radius:13px;padding:13px}.active-left{display:flex;align-items:center;gap:9px;min-width:0}.pulse{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(74,222,128,.08);flex:none}.pulse.paused{background:var(--yellow);box-shadow:0 0 0 5px rgba(250,204,21,.08)}.timer-meta{display:grid;gap:4px}.timer-meta .title{font-size:13px;font-weight:800}.timer-meta .path{font-size:10px;color:var(--muted)}
+    .modal-backdrop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px}.modal-backdrop.open{display:flex}.modal{width:min(780px,100%);max-height:min(90vh,920px);overflow:auto;background:#0b1118;border:1px solid var(--line2);border-radius:18px;box-shadow:0 35px 120px rgba(0,0,0,.58);padding:18px}.modal-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:15px}.modal-title{font-size:17px;font-weight:850}.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.span2{grid-column:1/-1}.field{display:grid;gap:5px}.field label{font-size:9px;color:var(--muted);font-weight:750;letter-spacing:.09em;text-transform:uppercase}.field input,.field select,.field textarea{width:100%;background:var(--panel3);border:1px solid var(--line2);color:var(--text);border-radius:10px;padding:9px 10px;outline:0;font-size:11px}.field textarea{min-height:90px;resize:vertical}.radio-row{display:flex;gap:7px;flex-wrap:wrap}.radio{border:1px solid var(--line2);background:var(--panel3);border-radius:10px;padding:9px 11px;font-size:10px}.radio input{margin-right:5px}.modal-foot{display:flex;justify-content:flex-end;gap:7px;margin-top:16px}.helper{font-size:9px;color:var(--muted);line-height:1.5}.danger-note{color:#fda4af;background:rgba(251,113,133,.05);border:1px solid rgba(251,113,133,.15);padding:9px 10px;border-radius:10px;font-size:10px}.check-row{display:flex;gap:8px;align-items:center;font-size:10px;color:var(--muted)}.status-editor{display:grid;gap:7px}.status-row{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;border:1px solid var(--line);background:var(--panel3);padding:8px 9px;border-radius:10px}.status-row input{width:100%;background:transparent;border:0;outline:0;color:var(--text);font-size:11px}.badge{font-size:9px;padding:3px 6px;border-radius:999px;border:1px solid var(--line2);color:var(--muted)}
+    .mobile-nav{display:none}.hidden{display:none !important}.loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center}.loader-box{text-align:center}.loader-box .brand-mark{margin:0 auto 10px}.loader-title{font-weight:850}.loader-sub{font-size:10px;color:var(--muted);margin-top:5px}
+
+    .velocity-chart{display:grid;grid-template-columns:repeat(12,1fr);gap:7px;align-items:end;height:150px}.velocity-col{display:grid;gap:5px;text-align:center;min-width:0}.velocity-bar{height:112px;border:1px solid var(--line);border-radius:7px;background:#0a121a;display:flex;align-items:flex-end;overflow:hidden}.velocity-bar span{display:block;width:100%;background:linear-gradient(180deg,var(--purple),var(--accent));min-height:2px}.velocity-label{font:8px var(--mono);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.velocity-value{font:8px var(--mono);color:var(--text)}.status-mix{display:grid;gap:8px}.status-mix-row{display:grid;grid-template-columns:120px 1fr 42px;gap:8px;align-items:center;font-size:10px}.status-dot{height:8px;border-radius:999px;background:linear-gradient(90deg,var(--purple),var(--accent))}.health-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.health-card{border:1px solid var(--line);background:var(--panel3);border-radius:11px;padding:11px}.health-k{font:9px var(--mono);color:var(--muted);text-transform:uppercase}.health-v{font-size:18px;font-weight:800;margin-top:4px}.health-s{font-size:9px;color:var(--muted);margin-top:3px}.health-ok{border-color:rgba(74,222,128,.24)}.health-warn{border-color:rgba(250,204,21,.24)}.health-bad{border-color:rgba(251,113,133,.24)}.health-empty{font-size:10px;color:var(--muted)}.search-results{display:grid;gap:7px;max-height:52vh;overflow:auto}.search-result{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid var(--line);background:var(--panel3);border-radius:10px}.search-result-main{min-width:0;flex:1}.search-result-title{font-size:11px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.search-result-sub{font-size:9px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.search-result-action{flex:none}.
+    @media (max-width:1050px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.section-grid,.timer-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr 1fr}.filters input:first-child{grid-column:1/-1}}
+    @media (max-width:760px){.app{display:block}.sidebar{display:none}main{padding:18px 14px 86px}.topbar{gap:12px;align-items:flex-start}.actions{justify-content:flex-start}.page-title{font-size:24px}.mobile-nav{display:flex;position:fixed;z-index:30;left:8px;right:8px;bottom:8px;padding:6px;border:1px solid var(--line2);background:rgba(10,15,22,.94);backdrop-filter:blur(16px);border-radius:15px;box-shadow:var(--shadow);justify-content:space-around}.mobile-nav button{flex:1;border:0;background:transparent;color:var(--muted);padding:9px 5px;border-radius:10px;font-size:9px}.mobile-nav button.active{background:rgba(103,232,249,.09);color:var(--accent)}.stats{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr}.modal-grid{grid-template-columns:1fr}.span2{grid-column:auto}.entry{grid-template-columns:30px 1fr}.entry-side{grid-column:2;justify-items:start;text-align:left}.problem-actions{max-width:42%}.heatmap{grid-template-columns:repeat(26,minmax(6px,1fr));gap:2px}}
+    @media (max-width:470px){.stats{grid-template-columns:1fr}.topic-head,.sub-head,.problem{align-items:flex-start}.topic-actions,.sub-actions,.problem-actions{justify-content:flex-end}.filters{grid-template-columns:1fr}.actions{width:100%}.actions .btn{flex:1}.timer-big{font-size:36px}}
+    .gate-box{max-width:360px;text-align:center;display:grid;gap:14px;justify-items:center;padding:0 20px}
+    .gate-box .brand-mark{width:52px;height:52px;font-size:22px;margin:0 auto}
+    .gate-copy{font-size:11px;color:var(--muted);line-height:1.6}
+    .gbtn{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border-radius:11px;border:1px solid #dfe3ea;background:#fff;color:#1f2430;font-weight:750;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    .gbtn:hover{filter:brightness(.97)}
+    .gbtn:disabled{opacity:.6;cursor:wait}
+    .gbtn .g-mark{width:18px;height:18px;border-radius:50%;flex:none;background:conic-gradient(from -45deg,#4285F4 0 25%,#34A853 25% 50%,#FBBC05 50% 75%,#EA4335 75% 100%)}
+    .gate-error{color:#fda4af;font-size:10px;min-height:14px}
+    .link-banner{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 11px;border:1px solid rgba(250,204,21,.3);background:rgba(250,204,21,.07);border-radius:11px;font-size:10px;color:#fde68a}
+    .link-banner button{white-space:nowrap;flex:none}
+    .account-box{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:11px;background:var(--panel3)}
+    .account-box img{width:26px;height:26px;border-radius:50%;flex:none;object-fit:cover}
+    .account-box .avatar-fallback{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--panel2);font-size:10px;font-weight:800;color:var(--accent)}
+    .account-meta{min-width:0;flex:1}
+    .account-name{font-size:10px;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .account-email{font-size:9px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .trash-list{display:grid;gap:7px;max-height:44vh;overflow:auto}
+    .trash-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel3);border-radius:11px;padding:9px 10px;font-size:10px}
+    .trash-item .ti-main{min-width:0}
+    .trash-item .ti-title{font-weight:750;font-size:11px}
+    .trash-item .ti-sub{color:var(--muted);font-size:9px;margin-top:2px}
+  </style>
+</head>
+<body>
+<div class="loader" id="loader"><div class="loader-box"><div class="brand-mark">λ</div><div class="loader-title">DSA Journey Tracker</div><div class="loader-sub" id="loaderSub">Connecting your journey…</div></div></div>
+<div class="loader hidden" id="authGate"><div class="gate-box"><div class="brand-mark">λ</div><div class="loader-title">DSA Journey Tracker</div><div class="gate-copy" id="gateCopy">Sign in with Google to save your journey permanently to your own account. Your data lives in your own private Firebase database and is never shared.</div><button class="gbtn" id="googleSignInBtn"><span class="g-mark"></span><span>Continue with Google</span></button><div class="gate-error" id="gateError"></div></div></div>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">λ</div><div><div class="brand-title">DSA Journey Tracker</div><div class="brand-sub">your Git log for learning</div></div></div>
+    <nav id="sideNav">
+      <button class="nav-btn active" data-nav="dashboard">⌂ <span>Overview</span></button>
+      <button class="nav-btn" data-nav="curriculum">◈ <span>Curriculum</span></button>
+      <button class="nav-btn" data-nav="timeline">≋ <span>Journey Log</span></button>
+      <button class="nav-btn" data-nav="timer">◷ <span>Live Session</span></button>
+      <button class="nav-btn" data-nav="settings">⚙ <span>Settings & Backup</span></button>
+    </nav>
+    <div class="side-bottom"><div class="link-banner hidden" id="linkBanner"><span>Guest data — link a Google account so it's never lost.</span><button class="btn small primary" id="linkGoogleBtn">Link Google</button></div><div class="sync" id="syncBox"><span class="dot"></span><b id="syncText">Connecting…</b><br><span id="syncSub">Waiting for Firebase</span></div><div class="account-box hidden" id="accountBox"><img id="accountPhoto" class="hidden" alt=""><div class="avatar-fallback" id="accountFallback"></div><div class="account-meta"><div class="account-name" id="accountName"></div><div class="account-email" id="accountEmail"></div></div><button class="btn icon small" id="signOutBtn" title="Sign out">⎋</button></div><div class="uid-box" id="uidBox"></div></div>
+  </aside>
+  <main>
+    <div class="topbar"><div><div class="eyebrow">DSA / PERSONAL LEDGER</div><div class="page-title" id="pageTitle">Overview</div><div class="subtle" id="pageSub">Your learning history, progress and streak in one place.</div></div><div class="actions"><button class="btn ghost" id="globalSearchBtn">⌕ Search</button><button class="btn" id="manualHeaderBtn">＋ Log Manually</button><button class="btn primary" id="startHeaderBtn">▶ Start Session</button></div></div>
+
+    <section class="view active" id="view-dashboard">
+      <div class="grid stats"><div class="stat"><div class="stat-k">All-time</div><div class="stat-v" id="statAllTime">0m</div><div class="stat-s">total logged study time</div></div><div class="stat"><div class="stat-k">This week</div><div class="stat-v" id="statWeek">0m</div><div class="stat-s">current Monday–Sunday</div></div><div class="stat"><div class="stat-k">Today</div><div class="stat-v" id="statToday">0m</div><div class="stat-s">local calendar day</div></div><div class="stat"><div class="stat-k">Streak</div><div class="stat-v" id="statStreak">0d</div><div class="stat-s" id="statLongest">longest 0d</div></div></div>
+      <div class="section-grid"><div class="card"><div class="card-head"><div><div class="card-title">Study heatmap</div><div class="card-sub">Last 26 weeks · darker means more time studied</div></div><div class="card-sub" id="heatTotal"></div></div><div id="heatmap" class="heat-wrap"></div><div class="heat-caption">Hover a day for exact time · click a day to open that day in Journey Log.</div></div><div class="card"><div class="card-head"><div><div class="card-title">This week</div><div class="card-sub">Minutes studied per day</div></div></div><div id="weekChart" class="week-chart"></div></div></div><div class="section-grid"><div class="card"><div class="card-head"><div><div class="card-title">Learning velocity</div><div class="card-sub">Weekly study time · last 12 weeks</div></div><div class="card-sub" id="velocityTotal"></div></div><div id="velocityChart" class="velocity-chart"></div></div><div class="card"><div class="card-head"><div><div class="card-title">Problem status mix</div><div class="card-sub">Current latest status across curriculum</div></div><div class="card-sub" id="statusMixTotal"></div></div><div id="statusMix" class="status-mix"></div></div></div>
+      <div class="section-grid"><div class="card"><div class="card-head"><div><div class="card-title">Topic progress</div><div class="card-sub">Solved / total problems</div></div><button class="btn small" data-nav="curriculum">Open curriculum</button></div><div id="topicProgress" class="topic-progress"></div></div><div class="card"><div class="card-head"><div><div class="card-title">Revisit queue</div><div class="card-sub">Latest status is “Revisit Later”</div></div></div><div id="revisitList" class="revisit"></div></div></div>
+      <div class="section-grid"><div class="card"><div class="card-head"><div><div class="card-title">Problem coverage</div><div class="card-sub">Distinct curriculum problems touched at least once</div></div></div><div class="grid stats" style="grid-template-columns:repeat(3,1fr)"><div class="stat"><div class="stat-k">Total</div><div class="stat-v" id="countTotal">0</div></div><div class="stat"><div class="stat-k">Touched</div><div class="stat-v" id="countTouched">0</div></div><div class="stat"><div class="stat-k">Solved</div><div class="stat-v" id="countSolved">0</div></div></div></div><div class="card"><div class="card-head"><div><div class="card-title">Recent activity</div><div class="card-sub">Latest five completed entries</div></div><button class="btn small" data-nav="timeline">View all</button></div><div id="recentMini"></div></div></div>
+    </section>
+
+    <section class="view" id="view-curriculum"><div class="card"><div class="card-head"><div><div class="card-title">Curriculum</div><div class="card-sub">Everything here is editable: topics, sub-topics, problems, metadata and order.</div></div><div class="toolbar-end"><button class="btn small" id="collapseAllBtn">Collapse all</button><button class="btn small" id="expandAllBtn">Expand all</button><button class="btn small" id="curriculumJsonBtn">{} JSON editor</button><button class="btn primary" id="addTopicBtn">＋ Add topic</button></div></div><div class="toolbar" style="margin-bottom:12px"><input class="control" id="curriculumSearch" placeholder="Search topics, sub-topics or problems…" style="flex:1;min-width:220px"><button class="btn small" id="clearCurriculumSearch">Clear</button></div><div class="topic-list" id="curriculumTree"></div></div></section>
+
+    <section class="view" id="view-timeline"><div class="card"><div class="card-head"><div><div class="card-title">Journey log</div><div class="card-sub">Every completed session is preserved here. Nothing is overwritten.</div></div><div class="card-sub" id="timelineCount"></div></div><div class="filters"><input class="control" id="filterSearch" placeholder="Search problems, labels or notes…"><select class="control" id="filterTopic"></select><select class="control" id="filterType"><option value="">All types</option><option value="problem">Problem</option><option value="study">General Study</option></select><select class="control" id="filterStatus"><option value="">All statuses</option></select><input class="control" id="filterFrom" type="date"><input class="control" id="filterTo" type="date"><select class="control" id="groupMode"><option value="day">Group by day</option><option value="week">Group by week</option></select><button class="btn small" id="clearFilters">Clear filters</button></div><div class="timeline" id="timeline"></div></div></section>
+
+    <section class="view" id="view-timer"><div class="timer-grid"><div class="card timer-card"><div class="card-head"><div><div class="card-title">Live session</div><div class="card-sub">Timer state is persisted so refresh/close does not erase an in-progress session.</div></div><span class="pill" id="timerModePill">Idle</span></div><div id="timerContent"></div></div><div class="card"><div class="card-head"><div><div class="card-title">Quick actions</div><div class="card-sub">Start from the curriculum or here.</div></div></div><div class="toolbar" style="display:grid;gap:8px"><button class="btn primary" id="timerQuickStart">▶ Start new session</button><button class="btn" id="timerQuickManual">＋ Log manually</button><button class="btn ghost" data-nav="curriculum">◈ Browse curriculum</button></div></div></div></section>
+
+    <section class="view" id="view-settings"><div class="section-grid"><div class="card"><div class="card-head"><div><div class="card-title">Status workflow</div><div class="card-sub">Edit the statuses you use. Renaming migrates historical sessions too.</div></div></div><div id="statusEditor" class="status-editor"></div><div class="toolbar" style="margin-top:10px"><input class="control" id="newStatusInput" placeholder="Add status…" maxlength="40"><button class="btn" id="addStatusBtn">Add status</button></div><div class="helper" style="margin-top:8px">A status cannot be deleted while any session or problem uses it. “Not Touched” is the default when no problem session exists.</div></div><div class="card"><div class="card-head"><div><div class="card-title">Official Striver A2Z catalog</div><div class="card-sub">Load the current Take U Forward A2Z problem catalog with canonical ordering and available practice links.</div></div></div><div class="toolbar"><button class="btn primary" id="syncOfficialBtn">Sync official A2Z</button><button class="btn" id="exportJsonBtn">Export JSON</button><button class="btn" id="exportCsvBtn">Export CSV</button><label class="btn" style="display:inline-flex;align-items:center;gap:6px">Import JSON<input id="importJsonInput" type="file" accept="application/json,.json" hidden></label></div><div class="helper" style="margin-top:10px">Sync updates the canonical A2Z catalog while preserving your personal problem notes, tags and recorded session history wherever the problem identity matches.</div><div class="danger-note" style="margin-top:11px">Custom topics, sub-topics and problems remain yours. Curriculum deletion never deletes old journey entries.</div></div></div><div class="card" style="margin-top:14px"><div class="card-head"><div><div class="card-title">Data integrity</div><div class="card-sub">Recalculate every problem’s latest status from the immutable session history.</div></div><button class="btn" id="rebuildStatusesBtn">Rebuild statuses</button></div><div class="helper">Use this after a bulk import or if you ever migrate an older database schema.</div></div><div class="card" style="margin-top:14px"><div class="card-head"><div><div class="card-title">Data health</div><div class="card-sub">Audit the live Firebase data for orphaned sessions, malformed curriculum nodes and consistency issues.</div></div><button class="btn" id="runAuditBtn">Run audit</button></div><div id="dataHealth" class="health-grid"><div class="health-empty">Audit not run yet.</div></div></div><div class="card" style="margin-top:14px"><div class="card-head"><div><div class="card-title">Trash</div><div class="card-sub">Deleted journey entries are kept here, not erased. Restore anytime — nothing is permanently removed by this app.</div></div></div><div id="trashList" class="trash-list"><div class="health-empty">Trash is empty.</div></div></div></section>
+  </main>
+</div>
+<div class="mobile-nav" id="mobileNav"><button data-nav="dashboard" class="active">⌂<br>Overview</button><button data-nav="curriculum">◈<br>Curriculum</button><button data-nav="timeline">≋<br>Journey</button><button data-nav="timer">◷<br>Timer</button><button data-nav="settings">⚙<br>Settings</button></div>
+
+<!-- Session modal -->
+<div class="modal-backdrop" id="sessionModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">Start a live session</div><div class="subtle">Pick a problem or a general study context. The timer starts only after you save this form.</div></div><button class="btn small" data-close="sessionModal">✕</button></div><form id="sessionForm"><div class="modal-grid"><div class="field span2"><label>Session type</label><div class="radio-row"><label class="radio"><input type="radio" name="sessionType" value="problem" checked> Problem</label><label class="radio"><input type="radio" name="sessionType" value="study"> General Study</label></div></div><div class="field"><label>Topic</label><select id="sessTopic" required></select></div><div class="field"><label>Sub-topic</label><select id="sessSubtopic" required></select></div><div class="field span2" id="sessProblemWrap"><label>Problem</label><select id="sessProblem"></select><div class="helper">Use the search field below when a sub-topic contains many problems.</div><input class="control" id="sessProblemSearch" placeholder="Search this sub-topic…"></div><div class="field span2 hidden" id="sessLabelWrap"><label>Study label</label><input id="sessLabel" maxlength="160" placeholder="Watched segment tree video / revised binary search"></div><div class="field" id="sessStatusWrap"><label>Status achieved</label><select id="sessStatus"></select></div><div class="field"><label>Notes</label><textarea id="sessNotes" placeholder="What clicked? What did you learn? What should you revisit?"></textarea></div><div class="field span2 hidden" id="sessNewProblemWrap"><label>New problem name</label><input id="sessNewProblem" maxlength="160" placeholder="Create a problem directly from this session"></div></div><div class="modal-foot"><button type="button" class="btn ghost" data-close="sessionModal">Cancel</button><button class="btn primary">Start timer</button></div></form></div></div>
+
+<!-- Manual modal -->
+<div class="modal-backdrop" id="manualModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">Log a session manually</div><div class="subtle">Backfill the real time and duration. It will appear in the same journey log.</div></div><button class="btn small" data-close="manualModal">✕</button></div><form id="manualForm"><div class="modal-grid"><div class="field span2"><label>Session type</label><div class="radio-row"><label class="radio"><input type="radio" name="manualType" value="problem" checked> Problem</label><label class="radio"><input type="radio" name="manualType" value="study"> General Study</label></div></div><div class="field"><label>Date & time</label><input id="manualAt" type="datetime-local" required></div><div class="field"><label>Duration</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><input id="manualHours" type="number" min="0" max="99" step="1" value="0" placeholder="Hours"><input id="manualMinutes" type="number" min="0" max="59" step="1" value="30" placeholder="Minutes"></div></div><div class="field"><label>Topic</label><select id="manualTopic" required></select></div><div class="field"><label>Sub-topic</label><select id="manualSubtopic" required></select></div><div class="field span2" id="manualProblemWrap"><label>Problem</label><select id="manualProblem"></select><div class="helper">You can create a new problem directly from this backfill too.</div><input class="control" id="manualProblemSearch" placeholder="Search this sub-topic…" style="margin-top:5px"></div><div class="field span2 hidden" id="manualNewProblemWrap"><label>New problem name</label><input id="manualNewProblem" maxlength="160" placeholder="Create a new problem and log this session"></div><div class="field span2 hidden" id="manualLabelWrap"><label>Study label</label><input id="manualLabel" maxlength="160" placeholder="Revised prefix sums"></div><div class="field" id="manualStatusWrap"><label>Status achieved</label><select id="manualStatus"></select></div><div class="field"><label>Notes</label><textarea id="manualNotes" placeholder="Notes, mistakes, key insight…"></textarea></div></div><div class="modal-foot"><button type="button" class="btn ghost" data-close="manualModal">Cancel</button><button class="btn primary">Save to journey</button></div></form></div></div>
+
+<!-- Stop modal -->
+<div class="modal-backdrop" id="stopModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">Complete session</div><div class="subtle">Review exactly what you studied. Nothing is written to the journey until you save here, and every field remains editable later.</div></div><button class="btn small" data-close="stopModal">✕</button></div><form id="stopForm"><div class="modal-grid"><div class="field"><label>Session type</label><select id="stopType"><option value="problem">Problem</option><option value="study">General Study</option></select></div><div class="field"><label>Recorded mode</label><div class="control">Live</div></div><div class="field"><label>Date & time</label><input id="stopAt" type="datetime-local" required></div><div class="field"><label>Duration</label><div class="control" id="stopDuration" style="font-family:var(--mono)">00:00:00</div></div><div class="field"><label>Topic</label><select id="stopTopic" required></select></div><div class="field"><label>Sub-topic</label><select id="stopSubtopic" required></select></div><div class="field span2" id="stopProblemWrap"><label>Problem</label><select id="stopProblem"></select><input class="control" id="stopProblemSearch" placeholder="Search this sub-topic…" style="margin-top:5px"><div class="helper">You can also create a new problem here if the session was for something outside the sheet.</div></div><div class="field span2 hidden" id="stopNewProblemWrap"><label>New problem name</label><input id="stopNewProblem" maxlength="160" placeholder="Problem not in the curriculum"></div><div class="field span2 hidden" id="stopLabelWrap"><label>Study label</label><input id="stopLabel" maxlength="160" placeholder="Watched segment tree video / revised binary search"></div><div class="field" id="stopStatusWrap"><label>Status achieved</label><select id="stopStatus"></select></div><div class="field span2"><label>Notes</label><textarea id="stopNotes" maxlength="2000" placeholder="What did you learn? What went wrong? What should you revisit?"></textarea></div><div class="field span2"><div class="helper" id="stopSummary"></div></div></div><div class="modal-foot"><button type="button" class="btn danger" id="discardTimerBtn">Discard session</button><button type="button" class="btn ghost" data-close="stopModal">Keep timer running</button><button class="btn primary">Save session</button></div></form></div></div>
+
+<!-- Edit session modal -->
+<div class="modal-backdrop" id="editModal"><div class="modal"><div class="modal-head"><div><div class="modal-title">Edit journey entry</div><div class="subtle">Correct the timestamp, duration, context, status and notes. The original values are kept in an internal, append-only revision log — nothing is silently lost.</div></div><button class="btn small" data-close="editModal">✕</button></div><form id="editForm"><input type="hidden" id="editId"><div class="modal-grid"><div class="field"><label>Session type</label><select id="editType"><option value="problem">Problem</option><option value="study">General Study</option></select></div><div class="field"><label>Recorded mode</label><div class="control" id="editModeLabel">—</div></div><div class="field"><label>Date & time</label><input id="editAt" type="datetime-local" required></div><div class="field"><label>Duration</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><input id="editHours" type="number" min="0" max="99" step="1" value="0"><input id="editMinutes" type="number" min="0" max="59" step="1" value="30"></div></div><div class="field"><label>Topic</label><select id="editTopic" required></select></div><div class="field"><label>Sub-topic</label><select id="editSubtopic" required></select></div><div class="field span2" id="editProblemWrap"><label>Problem</label><select id="editProblem"></select></div><div class="field span2 hidden" id="editLabelWrap"><label>Study label</label><input id="editLabel" maxlength="160"></div><div class="field" id="editStatusWrap"><label>Status</label><select id="editStatus"></select></div><div class="field"><label>Notes</label><textarea id="editNotes" maxlength="2000"></textarea></div></div><div class="modal-foot"><button type="button" class="btn danger" id="deleteEntryBtn">Move to trash</button><button class="btn primary">Save changes</button></div></form></div></div>
+
+<!-- Curriculum modal -->
+<div class="modal-backdrop" id="itemModal"><div class="modal"><div class="modal-head"><div><div class="modal-title" id="itemModalTitle">Add item</div><div class="subtle" id="itemModalSub">All curriculum changes are written directly to your Firebase data.</div></div><button class="btn small" data-close="itemModal">✕</button></div><form id="itemForm"><input type="hidden" id="itemKind"><input type="hidden" id="itemTopicId"><input type="hidden" id="itemSubId"><input type="hidden" id="itemId"><div class="modal-grid"><div class="field span2"><label>Name</label><input id="itemName" required maxlength="160"></div><div class="field" id="difficultyField"><label>Difficulty</label><select id="itemDifficulty"><option>Easy</option><option>Medium</option><option>Hard</option></select></div><div class="field" id="linkField"><label>Link</label><input id="itemLink" type="url" placeholder="https://leetcode.com/…"></div><div class="field span2" id="tagsField"><label>Tags</label><input id="itemTags" placeholder="two-pointer, hashing, prefix-sum"></div><div class="field span2" id="notesField"><label>Personal notes</label><textarea id="itemNotes" placeholder="Your own reminder for this problem…"></textarea></div></div><div class="modal-foot"><button type="button" class="btn ghost" data-close="itemModal">Cancel</button><button class="btn primary">Save</button></div></form></div></div>
+
+<!-- Curriculum JSON editor modal -->
+<div class="modal-backdrop" id="jsonModal"><div class="modal" style="width:min(980px,100%)"><div class="modal-head"><div><div class="modal-title">Curriculum JSON editor</div><div class="subtle">Directly edit topics, sub-topics, problems, metadata and order. This edits curriculum only; journey history is never touched.</div></div><button class="btn small" data-close="jsonModal">✕</button></div><textarea id="curriculumJsonEditor" class="control json-editor" spellcheck="false"></textarea><div id="jsonStatus" class="json-status"></div><div class="modal-foot"><button type="button" class="btn" id="jsonReloadBtn">Reload live data</button><button type="button" class="btn" id="jsonFormatBtn">Format / Validate</button><button type="button" class="btn ghost" data-close="jsonModal">Cancel</button><button type="button" class="btn primary" id="jsonApplyBtn">Save to Firebase</button></div></div></div>
+
+<!-- Generic confirm modal -->
+<div class="modal-backdrop" id="searchModal"><div class="modal" style="width:min(900px,100%)"><div class="modal-head"><div><div class="modal-title">Global search</div><div class="subtle">Search problems and journey history from anywhere. Press Ctrl/Cmd + K anytime.</div></div><button class="btn small" data-close="searchModal">✕</button></div><div class="field"><input class="control" id="globalSearchInput" placeholder="Search problems, topics, notes, labels…" autocomplete="off"></div><div id="globalSearchResults" class="search-results"></div></div></div><div class="modal-backdrop" id="confirmModal"><div class="modal" style="width:min(520px,100%)"><div class="modal-head"><div><div class="modal-title" id="confirmTitle">Confirm</div><div class="subtle" id="confirmMessage"></div></div><button class="btn small" data-close="confirmModal">✕</button></div><div class="modal-foot"><button class="btn ghost" data-close="confirmModal">Cancel</button><button class="btn danger" id="confirmAction">Confirm</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-database-compat.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  // Paste the config object from YOUR NEW Firebase project here (Project settings -> General ->
+  // "Your apps" -> Web app -> SDK setup and configuration -> Config). See FIREBASE_SETUP.md, Step 6.
+  // This object is not a secret — it identifies your project to Google's servers. Real protection
+  // comes from the Realtime Database security rules (Step 8), not from hiding this object.
+  const firebaseConfig = {
+  apiKey: "",
+  databaseURL: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: "",
+  measurementId: "
+};
+
+  const BUILTIN_STATUS = ['Not Touched','Attempted','Solved with Hint','Solved','Revisit Later'];
+  const OFFICIAL_A2Z_URL = 'https://raw.githubusercontent.com/septilex/a2z-tracker/main/dsa_tracker/a2z_problems_simple.json';
+  const OFFICIAL_A2Z_SOURCE = 'tuf-a2z';
+
+  const DEFAULT_CURRICULUM = [
+    ['Arrays',[['Easy Arrays',['Two Sum','Remove Duplicates from Sorted Array','Maximum Subarray','Rotate Array']],['Medium Arrays',['Next Permutation','Majority Element II','Subarray Sum Equals K']],['Hard Arrays',['Count Inversions','Reverse Pairs']]]],
+    ['Strings',[['Basic Strings',['Valid Anagram','Longest Common Prefix','Valid Palindrome','Reverse Words in a String']],['Pattern Matching',['KMP / Prefix Function','Rabin-Karp']]]],
+    ['Linked List',[['Singly Linked List',['Reverse Linked List','Middle of the Linked List','Merge Two Sorted Lists','Remove Nth Node From End']],['Advanced Linked List',['Linked List Cycle II','Copy List with Random Pointer']]]],
+    ['Stacks & Queues',[['Stack Basics',['Valid Parentheses','Min Stack','Implement Queue using Stacks']],['Monotonic Structures',['Next Greater Element','Largest Rectangle in Histogram']]]],
+    ['Binary Search',[['BS Fundamentals',['Binary Search','Search Insert Position','Find First and Last Position']],['Answer on Search Space',['Koko Eating Bananas','Aggressive Cows','Capacity to Ship Packages']]]],
+    ['Sliding Window',[['Window Basics',['Longest Substring Without Repeating Characters','Maximum Sum Subarray of Size K']],['Advanced Windows',['Minimum Window Substring','Longest Repeating Character Replacement']]]],
+    ['Trees',[['Traversals',['Binary Tree Inorder Traversal','Binary Tree Level Order Traversal','Maximum Depth of Binary Tree']],['BST',['Validate BST','Lowest Common Ancestor of BST','Kth Smallest Element in BST']]]],
+    ['Graphs',[['BFS & DFS',['Number of Islands','Clone Graph','Flood Fill','Rotting Oranges']],['Shortest Paths',['Dijkstra','Bellman-Ford','Floyd-Warshall']]]],
+    ['Greedy',[['Greedy Basics',['Assign Cookies','Jump Game','Activity Selection']],['Intervals',['Merge Intervals','Non-overlapping Intervals']]]],
+    ['Heaps',[['Heap Basics',['Kth Largest Element','Top K Frequent Elements','Merge K Sorted Lists']],['Priority Queue Patterns',['Task Scheduler','Find Median from Data Stream']]]],
+    ['Tries',[['Trie Basics',['Implement Trie','Design Add and Search Words']]]],
+    ['Dynamic Programming',[['1D DP',['Climbing Stairs','House Robber','Coin Change']],['2D DP',['Unique Paths','Longest Common Subsequence','0/1 Knapsack']],['DP on Subsequences',['Target Sum','Partition Equal Subset Sum']]]],
+    ['Recursion & Backtracking',[['Recursion Basics',['Subsets','Permutations','Combination Sum']],['Backtracking',['N-Queens','Word Search']]]]
+  ];
+
+  const pageMeta = {
+    dashboard:['Overview','Your learning history, progress and streak in one place.'],
+    curriculum:['Curriculum','Edit the learning tree and problem metadata from the UI.'],
+    timeline:['Journey Log','Every completed session is preserved here.'],
+    timer:['Live Session','Run a persistent timer for what you are studying right now.'],
+    settings:['Settings & Backup','Manage statuses and protect your data.']
+  };
+  const store = { user:null, root:null, curriculum:{}, sessions:{}, activeTimer:null, settings:{statuses:null,statusSemantics:{}}, latestByProblem:{}, expandedTopics:new Set(), expandedSubs:new Set(), currentView:'dashboard', editingSessionId:null, searchTerm:'', renderQueued:false, lastAudit:null };
+  let ticker = null;
+  let pendingConfirm = null;
+  let saveLock = false;
+  const SAFE_ID = /^[A-Za-z0-9_.-]{1,64}$/;
+  const busyKeys = new Set();
+  async function withLock(key, fn){
+    if(busyKeys.has(key)) return undefined;
+    busyKeys.add(key);
+    try{ return await fn(); }
+    finally{ busyKeys.delete(key); }
+  }
+  function withButtonLock(btnEl, key, fn){
+    return async (...args) => {
+      if(busyKeys.has(key)) return;
+      const prevDisabled = btnEl?.disabled;
+      busyKeys.add(key);
+      if(btnEl) btnEl.disabled = true;
+      try{ return await fn(...args); }
+      finally{ busyKeys.delete(key); if(btnEl) btnEl.disabled = !!prevDisabled; }
+    };
+  }
+  function safeUrl(v){ const s=String(v||'').trim(); if(!s) return ''; try{ const u=new URL(s); return ['http:','https:'].includes(u.protocol) ? s : ''; }catch{ return ''; } }
+  // Prevents double-submit (double tap, slow network + impatient click) from creating duplicate
+  // journey entries or duplicate curriculum items: the submit button is disabled and the handler
+  // is locked for the duration of the async write.
+  function guardSubmit(formEl,key,handler){
+    formEl.addEventListener('submit', async e=>{
+      e.preventDefault();
+      if(busyKeys.has(key))return;
+      busyKeys.add(key);
+      const submitBtn=formEl.querySelector('button:not([type="button"])');
+      if(submitBtn) submitBtn.disabled=true;
+      try{ await handler(e); }
+      catch(err){ console.error(err); toast(err?.message||'Action failed'); }
+      finally{ busyKeys.delete(key); if(submitBtn) submitBtn.disabled=false; }
+    });
+  }
+
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const id = (prefix='x') => `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,7)}`;
+  const ts = () => Date.now();
+  const localInput = ms => { const d=new Date(ms); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; };
+  const fmtDateTime = ms => new Date(ms).toLocaleString([], {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+  const fmtDay = ms => new Date(ms).toLocaleDateString([], {weekday:'long',month:'short',day:'numeric',year:'numeric'});
+  const dayKey = ms => { const d=new Date(ms); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+  const startOfDay = ms => { const d=new Date(ms); d.setHours(0,0,0,0); return d.getTime(); };
+  const mondayStart = ms => { const d=new Date(ms); d.setHours(0,0,0,0); const delta=(d.getDay()+6)%7; d.setDate(d.getDate()-delta); return d.getTime(); };
+  const fmtDuration = sec => { sec=Math.max(0,Math.round(Number(sec)||0)); const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60; if(h) return `${h}h ${m}m`; if(m) return `${m}m ${s?s+'s':''}`.trim(); return `${s}s`; };
+  const clock = sec => { sec=Math.max(0,Math.floor(Number(sec)||0)); const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60,p=n=>String(n).padStart(2,'0'); return `${p(h)}:${p(m)}:${p(s)}`; };
+  const totalSeconds = (hEl,mEl) => Math.max(0,Number($(hEl).value||0)*3600+Number($(mEl).value||0)*60);
+
+  function toast(msg){ const e=$('toast'); e.textContent=msg; e.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>e.classList.remove('show'),2300); }
+  const toastStyle = document.createElement('style'); toastStyle.textContent='.toast{position:fixed;right:18px;bottom:18px;z-index:120;opacity:0;pointer-events:none;transform:translateY(8px);transition:.2s;padding:11px 13px;border:1px solid var(--line2);background:#0b1118;border-radius:11px;color:var(--text);font-size:11px;box-shadow:var(--shadow)}.toast.show{opacity:1;transform:none}'; document.head.appendChild(toastStyle);
+  function setSync(ok,msg){ $('syncBox').classList.toggle('ok',!!ok); $('syncText').textContent=ok?'Synced':'Offline'; $('syncSub').textContent=msg||''; }
+  function openModal(id){ $(id).classList.add('open'); }
+  function closeModal(id){ $(id).classList.remove('open'); }
+  let pendingResolve = null;
+  function confirmAction(title,message,action){ $('confirmTitle').textContent=title; $('confirmMessage').textContent=message; pendingConfirm=action; openModal('confirmModal'); }
+  function resolveConfirm(value){ const r=pendingResolve; pendingResolve=null; pendingConfirm=null; closeModal('confirmModal'); if(r) r(value); }
+
+  function topicArr(){ return Object.entries(store.curriculum||{}).map(([id,t])=>({id,...t})).sort((a,b)=>(a.order??0)-(b.order??0)); }
+  function subArr(t){ return Object.entries(t?.subtopics||{}).map(([id,s])=>({id,...s})).sort((a,b)=>(a.order??0)-(b.order??0)); }
+  function probArr(s){ return Object.entries(s?.problems||{}).map(([id,p])=>({id,...p})).sort((a,b)=>(a.order??0)-(b.order??0)); }
+  function topic(id){ return store.curriculum[id]; }
+  function sub(tid,sid){ return store.curriculum[tid]?.subtopics?.[sid]; }
+  function problem(tid,sid,pid){ return store.curriculum[tid]?.subtopics?.[sid]?.problems?.[pid]; }
+  function problemById(pid){ for(const t of topicArr()) for(const s of subArr(t)) if(s.problems?.[pid]) return {topic:t,sub:s,problem:{id:pid,...s.problems[pid]}}; return null; }
+  function allProblems(){ const out=[]; for(const t of topicArr()) for(const s of subArr(t)) for(const p of probArr(s)) out.push({topic:t,sub:s,problem:p}); return out; }
+  function statuses(){ return Array.isArray(store.settings.statuses)&&store.settings.statuses.length?store.settings.statuses:BUILTIN_STATUS.slice(); }
+  function statusClass(s){ return ({'Not Touched':'st-not','Attempted':'st-attempt','Solved with Hint':'st-hint','Solved':'st-solved','Revisit Later':'st-revisit'})[s] || 'st-not'; }
+  function difficultyClass(d){ return String(d||'').toLowerCase(); }
+  function sessionArr(){ return Object.entries(store.sessions||{}).map(([id,s])=>({id,...s})).filter(s=>s && s.startedAt && !s.deletedAt); }
+  function trashedSessionArr(){ return Object.entries(store.sessions||{}).map(([id,s])=>({id,...s})).filter(s=>s && s.startedAt && s.deletedAt).sort((a,b)=>Number(b.deletedAt)-Number(a.deletedAt)); }
+  function rebuildLatestCache(){ const map={}; for(const s of sessionArr()){ if(s.type!=='problem'||!s.problemId) continue; const prev=map[s.problemId]; if(!prev || Number(s.startedAt)>Number(prev.startedAt) || (Number(s.startedAt)===Number(prev.startedAt)&&Number(s.createdAt||0)>Number(prev.createdAt||0))) map[s.problemId]=s; } store.latestByProblem=map; }
+  function latestForProblem(pid){ return store.latestByProblem[pid]||null; }
+  function semanticStatus(label){ return store.settings.statusSemantics?.[label] || ({'Not Touched':'neutral','Attempted':'attempted','Solved with Hint':'solved_hint','Solved':'solved','Revisit Later':'revisit'}[label] || 'neutral'); }
+  function isSolved(label){ return semanticStatus(label)==='solved'; }
+  function isRevisit(label){ return semanticStatus(label)==='revisit'; }
+  function derivedStatus(pid){ return latestForProblem(pid)?.status || 'Not Touched'; }
+
+  function countCurriculumProblems(curr){ let n=0; for(const t of Object.values(curr||{})) for(const s of Object.values(t?.subtopics||{})) n+=Object.keys(s?.problems||{}).length; return n; }
+  function safeKey(v){ return String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,48) || 'item'; }
+  function buildOfficialCurriculum(rows){
+    const groups=new Map();
+    for(const row of rows){
+      if(!row || !row.problem_name || !row.topic) continue;
+      const topicName=String(row.topic).trim();
+      if(!groups.has(topicName)) groups.set(topicName,[]);
+      groups.get(topicName).push(row);
+    }
+    const curr={}; let ti=0;
+    for(const [topicName, items] of groups){
+      ti++;
+      const tid=`tuf_${String(ti).padStart(2,'0')}`;
+      const topicObj={name:topicName,order:ti,source:OFFICIAL_A2Z_SOURCE,createdAt:ts(),updatedAt:ts(),subtopics:{}};
+      const diffBuckets={Easy:[],Medium:[],Hard:[]};
+      for(const row of items){ const d=['Easy','Medium','Hard'].includes(row.difficulty)?row.difficulty:'Easy'; diffBuckets[d].push(row); }
+      let si=0;
+      for(const d of ['Easy','Medium','Hard']){
+        const bucket=diffBuckets[d]; if(!bucket.length) continue;
+        si++;
+        const sid=`${tid}_${d.toLowerCase()}`;
+        const problems={};
+        bucket.forEach((row,pi)=>{
+          const pid=`a2z_${String(row.id).padStart(3,'0')}`;
+          problems[pid]={name:String(row.problem_name).trim(),difficulty:d,link:String(row.leetcode_url||''),youtubeUrl:String(row.youtube_url||''),tags:[],notes:'',order:pi+1,officialOrder:Number(row.id),source:OFFICIAL_A2Z_SOURCE,sourceId:Number(row.id),latestStatus:'Not Touched',createdAt:ts(),updatedAt:ts()};
+        });
+        topicObj.subtopics[sid]={name:d,order:si,source:OFFICIAL_A2Z_SOURCE,problems,createdAt:ts(),updatedAt:ts()};
+      }
+      curr[tid]=topicObj;
+    }
+    return curr;
+  }
+  async function fetchOfficialA2Z(){
+    const res=await fetch(OFFICIAL_A2Z_URL,{cache:'no-store'});
+    if(!res.ok) throw new Error(`Official A2Z catalog request failed (${res.status})`);
+    const rows=await res.json();
+    if(!Array.isArray(rows)||rows.length<450) throw new Error('Official A2Z catalog returned an incomplete dataset');
+    const topics=new Set(rows.map(r=>r?.topic).filter(Boolean));
+    if(topics.size<18) throw new Error('Official A2Z catalog topic structure looks incomplete');
+    return {rows,curriculum:buildOfficialCurriculum(rows)};
+  }
+  async function syncOfficialA2Z({auto=false}={}){
+    const {rows,curriculum}=await fetchOfficialA2Z();
+    if(!auto){
+      const ok=await askConfirm('Sync official A2Z catalog?',`${rows.length} canonical problems will be loaded in official order. Existing journey sessions will be preserved. Personal notes/tags on matching problems are retained where possible.`,true);
+      if(!ok)return;
+    }
+    const current=store.curriculum||{};
+    const currentBySource={};
+    for(const {problem:p} of allProblems()) if(p.sourceId!=null) currentBySource[String(p.sourceId)]=p;
+    for(const [tid,t] of Object.entries(curriculum)) for(const [sid,s] of Object.entries(t.subtopics)) for(const [pid,p] of Object.entries(s.problems)){
+      const old=currentBySource[String(p.sourceId)];
+      if(old){ p.notes=old.notes||''; p.tags=Array.isArray(old.tags)?old.tags:[]; p.latestStatus=old.latestStatus||p.latestStatus; p.createdAt=old.createdAt||p.createdAt; }
+    }
+    // Preserve non-official/custom curriculum as a separate append-only area.
+    const customTopics={};
+    for(const [tid,t] of Object.entries(current)){
+      if(t.source===OFFICIAL_A2Z_SOURCE) continue;
+      customTopics[tid]=t;
+    }
+    for(const [tid,t] of Object.entries(customTopics)) curriculum[tid]=t;
+    await dbSet('curriculum',curriculum);
+    await dbSet('meta/curriculumInitialized',true);
+    await dbSet('meta/curriculumSource',{source:OFFICIAL_A2Z_SOURCE,totalProblems:rows.length,totalTopics:Object.keys(buildOfficialCurriculum(rows)).length,syncedAt:ts()});
+    toast(`Official A2Z synced: ${rows.length} problems`);
+  }
+
+  function normalizeSeed(){
+    const out={}; DEFAULT_CURRICULUM.forEach(([tn,subs],ti)=>{ const tid=id('t'); const t={name:tn,order:ti+1,subtopics:{},createdAt:ts(),updatedAt:ts()}; subs.forEach(([sn,probs],si)=>{ const sid=id('s'); const st={name:sn,order:si+1,problems:{},createdAt:ts(),updatedAt:ts()}; probs.forEach((pn,pi)=>{ const pid=id('p'); st.problems[pid]={name:pn,difficulty:pi%4===0?'Easy':pi%4===1?'Medium':'Easy',link:'',tags:[],notes:'',order:pi+1,latestStatus:'Not Touched',createdAt:ts(),updatedAt:ts()}; }); t.subtopics[sid]=st; }); out[tid]=t; }); return out;
+  }
+
+  async function dbGet(path){ return store.root.child(path).once('value').then(s=>s.val()); }
+  async function dbSet(path,val){ return store.root.child(path).set(val); }
+  async function dbUpdate(updates){ return store.root.update(updates); }
+
+  function storageGet(key){ try{return window.localStorage?.getItem(key)||null;}catch{return null;} }
+  function storageSet(key,value){ try{window.localStorage?.setItem(key,value);return true;}catch{return false;} }
+  function storageRemove(key){ try{window.localStorage?.removeItem(key);}catch{} }
+  function pendingKey(){ return `dsa_pending_${store.user?.uid||'anon'}`; }
+  function loadPending(){ try{return JSON.parse(storageGet(pendingKey())||'[]')}catch{return[]} }
+  function savePending(a){ storageSet(pendingKey(),JSON.stringify(a)); }
+  async function flushPending(){ if(!store.root)return; const a=loadPending(); if(!a.length)return; const rest=[]; for(const item of a){ try{const ref=store.root.child('sessions').push(); await ref.set(item); await refreshProblemLatest(item.problemId); }catch(e){rest.push(item);} } savePending(rest); if(a.length!==rest.length) toast(`${a.length-rest.length} saved offline session${a.length-rest.length===1?'':'s'} synced`); }
+
+  function saveLocalTimer(timer){ storageSet(`dsa_active_${store.user?.uid||'anon'}`,JSON.stringify(timer||null)); }
+  function getLocalTimer(){ try{return JSON.parse(storageGet(`dsa_active_${store.user?.uid||'anon'}`)||'null')}catch{return null} }
+
+  async function bootstrap(){
+    let curr=await dbGet('curriculum');
+    const existingSessions=await dbGet('sessions');
+    const sourceMeta=await dbGet('meta/curriculumSource');
+    const curriculumInitialized=await dbGet('meta/curriculumInitialized');
+    const existingCount=countCurriculumProblems(curr||{});
+    const hasCurriculumNode=curr!==null;
+    if(!hasCurriculumNode && curriculumInitialized===true){
+      // An explicitly empty curriculum is valid. Firebase returns null for an empty object node.
+      // Do not reseed it on reload.
+    } else if(!hasCurriculumNode){
+      try{
+        const official=await fetchOfficialA2Z();
+        await dbSet('curriculum',official.curriculum);
+        await dbSet('meta/curriculumInitialized',true);
+        await dbSet('meta/curriculumSource',{source:OFFICIAL_A2Z_SOURCE,totalProblems:official.rows.length,totalTopics:Object.keys(official.curriculum).length,syncedAt:ts()});
+      }catch(e){ const fallback=normalizeSeed(); await dbSet('curriculum',fallback); await dbSet('meta/curriculumInitialized',true); console.warn('Official A2Z seed unavailable, using safe fallback:',e); }
+    } else {
+      if(curriculumInitialized!==true) await dbSet('meta/curriculumInitialized',true);
+      if(!sourceMeta?.source && existingCount<200 && !existingSessions){
+      try{
+        const official=await fetchOfficialA2Z();
+        await dbSet('curriculum',official.curriculum);
+        await dbSet('meta/curriculumSource',{source:OFFICIAL_A2Z_SOURCE,totalProblems:official.rows.length,totalTopics:Object.keys(official.curriculum).length,syncedAt:ts()});
+      }catch(e){ console.warn('Official A2Z upgrade skipped:',e); }
+      }
+    }
+    const st=await dbGet('settings/statuses');
+    if(!st) await dbSet('settings/statuses',BUILTIN_STATUS.slice());
+    const sem=await dbGet('settings/statusSemantics');
+    if(!sem) await dbSet('settings/statusSemantics',{'Not Touched':'neutral','Attempted':'attempted','Solved with Hint':'solved_hint','Solved':'solved','Revisit Later':'revisit'});
+    const dbTimer=await dbGet('activeTimer');
+    const localTimer=getLocalTimer();
+    if(localTimer && (!dbTimer || Number(localTimer.updatedAt||0)>Number(dbTimer.updatedAt||0))) await dbSet('activeTimer',localTimer);
+  }
+
+  function subscribe(){
+    store.root.child('curriculum').on('value',snap=>{store.curriculum=snap.val()||{}; syncExpansionState(); scheduleRender();});
+    store.root.child('sessions').on('value',snap=>{store.sessions=snap.val()||{}; rebuildLatestCache(); scheduleRender();});
+    store.root.child('activeTimer').on('value',snap=>{store.activeTimer=snap.val()||null; if(store.activeTimer) saveLocalTimer(store.activeTimer); else storageRemove(`dsa_active_${store.user.uid}`); startTicker(); scheduleRender();});
+    store.root.child('settings/statuses').on('value',snap=>{store.settings.statuses=snap.val()||BUILTIN_STATUS.slice(); scheduleRender();});
+    store.root.child('settings/statusSemantics').on('value',snap=>{store.settings.statusSemantics=snap.val()||{}; scheduleRender();});
+    setSync(true,'Realtime Database connected');
+  }
+
+  function syncExpansionState(){ const tids=new Set(topicArr().map(t=>t.id)); for(const x of [...store.expandedTopics]) if(!tids.has(x)) store.expandedTopics.delete(x); }
+
+  // ---- Authentication -------------------------------------------------
+  // Production auth model: a brand-new visitor must sign in with Google before anything is stored
+  // (see the full-screen gate below) — this app never silently creates a new anonymous account.
+  // The one exception is backward compatibility: if this browser already has an anonymous session
+  // from an older build of this app, we do NOT throw that session away or force a fresh sign-in
+  // (that would orphan real, already-saved history). Instead the app loads normally and shows a
+  // permanent "link Google" banner so that data can be upgraded in place. Linking preserves the
+  // Firebase UID, so every byte already written under users/{uid} stays exactly where it is and
+  // becomes permanently reachable from the linked Google account — nothing is copied or moved.
+  function googleProvider(){ const p=new firebase.auth.GoogleAuthProvider(); p.setCustomParameters?.({prompt:'select_account'}); return p; }
+  function authErrorMessage(err){
+    const code=err?.code||'';
+    if(code==='auth/popup-blocked'||code==='auth/popup-closed-by-user'||code==='auth/cancelled-popup-request') return 'Sign-in was closed before finishing. Try again.';
+    if(code==='auth/network-request-failed') return 'Network error while signing in. Check your connection and try again.';
+    if(code==='auth/unauthorized-domain') return 'This site\u2019s domain is not authorized for sign-in yet. Add it under Authentication -> Settings -> Authorized domains in the Firebase console.';
+    return err?.message||'Sign-in failed.';
+  }
+  async function popupThenRedirect(action){
+    try{ return await action('popup'); }
+    catch(err){
+      const retryable=['auth/popup-blocked','auth/operation-not-supported-in-this-environment','auth/cancelled-popup-request'];
+      if(retryable.includes(err?.code)) return await action('redirect');
+      throw err;
+    }
+  }
+  async function signInWithGoogle(){
+    $('gateError').textContent=''; $('googleSignInBtn').disabled=true;
+    try{
+      await popupThenRedirect(mode=>{
+        const provider=googleProvider();
+        return mode==='popup' ? firebase.auth().signInWithPopup(provider) : firebase.auth().signInWithRedirect(provider);
+      });
+    }catch(err){ console.error(err); $('gateError').textContent=authErrorMessage(err); }
+    finally{ $('googleSignInBtn').disabled=false; }
+  }
+  async function linkGoogleAccount(){
+    const user=firebase.auth().currentUser; if(!user) return;
+    const btn=$('linkGoogleBtn'); if(btn) btn.disabled=true;
+    try{
+      await popupThenRedirect(mode=>{
+        const provider=googleProvider();
+        return mode==='popup' ? user.linkWithPopup(provider) : user.linkWithRedirect(provider);
+      });
+      renderAccount(firebase.auth().currentUser);
+      toast('Google account linked. Your journey is now permanently saved to it.');
+    }catch(err){
+      console.error(err);
+      if(err?.code==='auth/credential-already-in-use'){
+        const ok=await askConfirm(
+          'That Google account already has its own journey',
+          'This browser\u2019s guest data will stay exactly where it is (nothing is deleted), but it will keep living under a separate guest ID instead of this Google account. Before continuing, use Settings -> Export JSON to back up this guest data. Continue and sign in with that Google account\u2019s existing journey instead?',
+          true
+        );
+        if(ok){
+          try{ await firebase.auth().signInWithCredential(err.credential); }
+          catch(e2){ console.error(e2); toast(authErrorMessage(e2)); }
+        }
+      } else {
+        toast(authErrorMessage(err));
+      }
+    }finally{ if(btn) btn.disabled=false; }
+  }
+  async function signOutUser(){
+    const ok=await askConfirm('Sign out?','You can sign back in with the same Google account any time to reach this exact journey again.',false);
+    if(!ok)return;
+    if(store.activeTimer) saveLocalTimer(store.activeTimer);
+    await firebase.auth().signOut();
+    window.location.reload();
+  }
+  function renderAccount(u){
+    const box=$('accountBox'), banner=$('linkBanner');
+    if(!u){ box.classList.add('hidden'); banner.classList.add('hidden'); return; }
+    if(u.isAnonymous){
+      box.classList.add('hidden');
+      banner.classList.remove('hidden');
+    } else {
+      banner.classList.add('hidden');
+      box.classList.remove('hidden');
+      $('accountName').textContent=u.displayName||'Signed in';
+      $('accountEmail').textContent=u.email||'';
+      if(u.photoURL){ $('accountPhoto').src=u.photoURL; $('accountPhoto').classList.remove('hidden'); $('accountFallback').classList.add('hidden'); }
+      else { $('accountPhoto').classList.add('hidden'); $('accountFallback').classList.remove('hidden'); $('accountFallback').textContent=(u.displayName||u.email||'?').slice(0,1).toUpperCase(); }
+    }
+  }
+
+  async function init(){
+    try{
+      if(!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.databaseURL || !firebaseConfig.projectId || !firebaseConfig.appId || String(firebaseConfig.apiKey).includes('PASTE_')){
+        setSync(false,'Firebase configuration is incomplete in this file'); $('loaderSub').textContent='Paste your Firebase project config near the top of the <script> block (see FIREBASE_SETUP.md).'; $('loader').classList.add('hidden'); renderAll(); return;
+      }
+      firebase.initializeApp(firebaseConfig);
+      try{ await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL); }catch(e){ console.warn('setPersistence unavailable:',e); }
+      firebase.database().ref('.info/connected').on('value',s=>setSync(!!s.val(),s.val()?'Realtime Database connected':'Waiting for network…'));
+      let started=false;
+      firebase.auth().onAuthStateChanged(async u=>{
+        try {
+          renderAccount(u);
+          if(!u) {
+            $('loader').classList.add('hidden');
+            $('authGate').classList.remove('hidden');
+            return;
+          }
+          $('authGate').classList.add('hidden');
+          $('loader').classList.remove('hidden');
+          store.user=u;
+          store.root=firebase.database().ref(`users/${u.uid}`);
+          $('uidBox').textContent=`UID ${u.uid}`;
+          $('loaderSub').textContent='Loading your curriculum…';
+          await bootstrap();
+          $('loaderSub').textContent='Syncing your journey…';
+          subscribe();
+          await flushPending();
+          $('loader').classList.add('hidden');
+          started=true;
+          renderAll();
+        } catch(err) {
+          console.error('DSA Journey Tracker startup error:', err);
+          const msg = err?.code === 'PERMISSION_DENIED' || err?.code === 'permission-denied'
+            ? 'Firebase denied database access. Check your Realtime Database rules.'
+            : (err?.message || 'Could not load your Firebase data.');
+          $('loaderSub').textContent=msg;
+          setSync(false,msg);
+          $('loader').classList.add('hidden');
+          renderAll();
+          toast(msg);
+        }
+      });
+      // Complete any sign-in that fell back to a full-page redirect (mobile browsers, blocked popups).
+      try{ await firebase.auth().getRedirectResult(); }catch(err){ console.error(err); $('gateError').textContent=authErrorMessage(err); $('loader').classList.add('hidden'); $('authGate').classList.remove('hidden'); }
+      // Safety net: if nothing has resolved shortly (e.g. a stalled network request), stop blocking
+      // the UI behind the spinner forever — show the sign-in gate instead of a dead loading screen.
+      setTimeout(()=>{ if(!started && !firebase.auth().currentUser){ $('loader').classList.add('hidden'); $('authGate').classList.remove('hidden'); } },8000);
+    }catch(err){console.error(err);$('loaderSub').textContent=err.message||'Firebase initialization failed';setSync(false,err.message||'Firebase error');$('loader').classList.add('hidden');renderAll();toast('Could not initialize Firebase');}
+  }
+
+  function navigate(view){
+    if(view==='timer' && !store.activeTimer && !$('sessionModal').classList.contains('open')) { /* allowed; timer page simply shows idle */ }
+    store.currentView=view; if(view==='timeline'){ $('filterFrom').value=''; $('filterTo').value=''; } document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===`view-${view}`)); document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===view)); $('pageTitle').textContent=pageMeta[view][0]; $('pageSub').textContent=pageMeta[view][1]; renderAll(); window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function fillStatusSelect(idEl,selected=''){ const el=$(idEl); const cur=selected||el.value; el.innerHTML=statuses().map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join(''); if([...el.options].some(o=>o.value===cur))el.value=cur; }
+  function fillFilterStatusSelect(selected=''){ const el=$('filterStatus'); const cur=selected; el.innerHTML='<option value="">All statuses</option>'+statuses().map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join(''); el.value=cur||''; }
+  function fillTopicSelect(idEl,selected='',includeAll=false){ const el=$(idEl); const old=selected||el.value; const opts=topicArr().map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join(''); el.innerHTML=(includeAll?'<option value="">All topics</option>':'')+opts; if([...el.options].some(o=>o.value===old))el.value=old; }
+  function filteredProblems(tid,sid,search=''){ const term=search.trim().toLowerCase(); return probArr(sub(tid,sid)).filter(p=>!term||p.name.toLowerCase().includes(term)||(p.tags||[]).some(x=>x.toLowerCase().includes(term))); }
+  function fillSubSelect(topicId,subId,selected='',problemIdEl=null,problemSelected='',problemSearch=''){ const tid=$(topicId).value; const el=$(subId); const old=selected||el.value; el.innerHTML=subArr(topic(tid)).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join(''); if([...el.options].some(o=>o.value===old))el.value=old; if(problemIdEl) fillProblemSelect(problemIdEl,tid,el.value,problemSelected,problemSearch); }
+  function fillProblemSelect(idEl,tid,sid,selected='',search='',missingName=''){ const el=$(idEl); const list=filteredProblems(tid,sid,search); const old=selected||el.value; const missing=(old && old!=='__new__' && !list.some(p=>p.id===old) && missingName)?`<option value="${esc(old)}">[Deleted] ${esc(missingName)}</option>`:''; el.innerHTML=missing+list.map(p=>`<option value="${p.id}">${esc(p.name)} · ${esc(derivedStatus(p.id))}</option>`).join('')+'<option value="__new__">＋ Create new problem…</option>'; if([...el.options].some(o=>o.value===old))el.value=old; }
+  function fillAllFormSelects(){
+    const t0=$('sessTopic').value||topicArr()[0]?.id; fillTopicSelect('sessTopic',t0); fillSubSelect('sessTopic','sessSubtopic',$('sessSubtopic').value,'sessProblem',$('sessProblem').value,$('sessProblemSearch').value); fillTopicSelect('manualTopic',$('manualTopic').value||t0); fillSubSelect('manualTopic','manualSubtopic',$('manualSubtopic').value,'manualProblem',$('manualProblem').value,$('manualProblemSearch').value); fillStatusSelect('sessStatus',$('sessStatus').value||statuses()[0]); fillStatusSelect('manualStatus',$('manualStatus').value||statuses()[0]); fillStatusSelect('editStatus',$('editStatus').value||statuses()[0]); fillStatusSelect('stopStatus',$('stopStatus').value||statuses()[0]); fillFilterStatusSelect($('filterStatus').value); fillTopicSelect('filterTopic',$('filterTopic').value,true);
+  }
+
+  function updateSessionTypeUI(){ const type=document.querySelector('input[name=sessionType]:checked')?.value||'problem'; $('sessProblemWrap').classList.toggle('hidden',type!=='problem');$('sessStatusWrap').classList.toggle('hidden',type!=='problem');$('sessLabelWrap').classList.toggle('hidden',type==='problem');$('sessNewProblemWrap').classList.add('hidden'); }
+  function updateManualTypeUI(){ const type=document.querySelector('input[name=manualType]:checked')?.value||'problem';$('manualProblemWrap').classList.toggle('hidden',type!=='problem');$('manualStatusWrap').classList.toggle('hidden',type!=='problem');$('manualLabelWrap').classList.toggle('hidden',type==='problem'); if(type!=='problem')$('manualNewProblemWrap').classList.add('hidden'); }
+  function updateEditTypeUI(){ const type=$('editType').value; $('editProblemWrap').classList.toggle('hidden',type!=='problem');$('editStatusWrap').classList.toggle('hidden',type!=='problem');$('editLabelWrap').classList.toggle('hidden',type==='problem'); }
+
+  function openSessionModal(pref={}){
+    if(store.activeTimer){ navigate('timer'); toast('A live session is already running'); return; }
+    fillAllFormSelects(); document.querySelectorAll('input[name=sessionType]').forEach(r=>r.checked=r.value===(pref.type||'problem')); $('sessLabel').value='';$('sessNotes').value='';$('sessNewProblem').value='';$('sessProblemSearch').value='';
+    if(pref.topicId) $('sessTopic').value=pref.topicId; fillSubSelect('sessTopic','sessSubtopic',pref.subtopicId||'','sessProblem',pref.problemId||'',''); updateSessionTypeUI(); fillStatusSelect('sessStatus',pref.status||statuses()[0]); openModal('sessionModal');
+  }
+  function openManual(pref={}){
+    fillAllFormSelects(); $('manualAt').value=localInput(pref.at||ts()); $('manualHours').value=0; $('manualMinutes').value=pref.durationMin||30; $('manualLabel').value='';$('manualNotes').value='';$('manualNewProblem').value='';document.querySelectorAll('input[name=manualType]').forEach(r=>r.checked=r.value===(pref.type||'problem')); if(pref.topicId) $('manualTopic').value=pref.topicId; fillSubSelect('manualTopic','manualSubtopic',pref.subtopicId||'','manualProblem',pref.problemId||'',''); updateManualTypeUI(); fillStatusSelect('manualStatus',pref.status||statuses()[0]); openModal('manualModal');
+  }
+
+  async function createProblem(tid,sid,payload){ const ref=store.root.child(`curriculum/${tid}/subtopics/${sid}/problems`).push(); const count=probArr(sub(tid,sid)).length; const p={name:payload.name.trim(),difficulty:payload.difficulty||'Easy',link:payload.link||'',tags:payload.tags||[],notes:payload.notes||'',order:count+1,latestStatus:'Not Touched',createdAt:ts(),updatedAt:ts()}; await ref.set(p); await dbSet('meta/curriculumInitialized',true); if(store.curriculum?.[tid]?.subtopics?.[sid]){ store.curriculum[tid].subtopics[sid].problems=store.curriculum[tid].subtopics[sid].problems||{}; store.curriculum[tid].subtopics[sid].problems[ref.key]=p; store.expandedTopics.add(tid); store.expandedSubs.add(`${tid}:${sid}`); renderAll(); } return ref.key; }
+  async function createSession(data){
+    // createdAt is set once, from the server clock, and is never changed again after this — the
+    // Realtime Database security rules reject any later write that tries to alter it (see
+    // FIREBASE_SETUP.md). It is the tamper-resistant "this record has existed since" anchor;
+    // startedAt (the study date/time you enter) stays fully editable, as it should be.
+    const session={...data,createdAt:firebase.database.ServerValue.TIMESTAMP,updatedAt:firebase.database.ServerValue.TIMESTAMP};
+    if(!store.root){ const a=loadPending(); a.push(session); savePending(a); return; }
+    try{ const ref=store.root.child('sessions').push(); await ref.set(session); if(session.problemId) await refreshProblemLatest(session.problemId); }
+    catch(err){ const a=loadPending(); a.push(session); savePending(a); setSync(false,'Saved locally; Firebase will sync when back online'); toast('Saved offline; waiting for Firebase'); }
+  }
+  async function refreshProblemLatest(pid){ if(!pid||!store.root)return; const p=problemById(pid); if(!p)return; const st=derivedStatus(pid); await store.root.child(`curriculum/${p.topic.id}/subtopics/${p.sub.id}/problems/${pid}/latestStatus`).set(st); }
+  async function rebuildStatuses(){ for(const p of allProblems()) await store.root.child(`curriculum/${p.topic.id}/subtopics/${p.sub.id}/problems/${p.problem.id}/latestStatus`).set(derivedStatus(p.problem.id)); }
+
+  function timerSeconds(timer=store.activeTimer){ if(!timer)return 0; let n=Number(timer.elapsedBeforeRun||0); if(!timer.isPaused && timer.runningSince)n+=Math.floor((ts()-Number(timer.runningSince))/1000); return Math.max(0,n); }
+  function startTicker(){ clearInterval(ticker); if(store.activeTimer&&!store.activeTimer.isPaused) ticker=setInterval(()=>{if(store.currentView==='timer'||$('stopModal').classList.contains('open'))renderTimer();},1000); }
+  async function persistTimer(next){ next={...next,updatedAt:ts()}; store.activeTimer=next; saveLocalTimer(next); await store.root.child('activeTimer').set(next); }
+  async function startTimer(data){ if(store.activeTimer){toast('A live session is already running');return;} const timer={...data,sessionDraftId:id('draft'),startedAt:ts(),elapsedBeforeRun:0,runningSince:ts(),isPaused:false,updatedAt:ts()}; await persistTimer(timer); navigate('timer'); toast('Live timer started'); }
+  async function togglePause(){ if(!store.activeTimer)return; const t={...store.activeTimer}; if(t.isPaused){ t.isPaused=false; t.runningSince=ts(); } else { t.elapsedBeforeRun=timerSeconds(t); t.isPaused=true; t.runningSince=null; } await persistTimer(t); startTicker(); renderTimer(); }
+  async function stopTimer(){
+    if(!store.activeTimer)return;
+    const t=store.activeTimer, sec=timerSeconds(t);
+    fillTopicSelect('stopTopic',t.topicId); fillSubSelect('stopTopic','stopSubtopic',t.subtopicId,'stopProblem',t.problemId||'','');
+    if(t.problemId&&!problem(t.topicId,t.subtopicId,t.problemId)) fillProblemSelect('stopProblem',t.topicId,t.subtopicId,t.problemId,'',t.problemName||'Deleted problem');
+    $('stopType').value=t.type||'problem'; $('stopAt').value=localInput(t.startedAt); $('stopDuration').textContent=clock(sec);
+    $('stopProblemSearch').value=''; $('stopNewProblem').value=''; $('stopLabel').value=t.label||''; $('stopNotes').value=t.notes||'';
+    fillStatusSelect('stopStatus',t.status||statuses()[0]); updateStopTypeUI();
+    $('stopSummary').textContent=`${fmtDuration(sec)} · started ${fmtDateTime(t.startedAt)}`; openModal('stopModal');
+  }
+  function updateStopTypeUI(){
+    const type=$('stopType').value; const problemMode=type==='problem';
+    $('stopProblemWrap').classList.toggle('hidden',!problemMode); $('stopStatusWrap').classList.toggle('hidden',!problemMode); $('stopLabelWrap').classList.toggle('hidden',problemMode); if(!problemMode)$('stopNewProblemWrap').classList.add('hidden');
+  }
+  async function finalizeTimer(){
+    if(!store.activeTimer)return;
+    const t=store.activeTimer, type=$('stopType').value, tid=$('stopTopic').value, sid=$('stopSubtopic').value;
+    let pid=type==='problem'?$(`stopProblem`).value:null;
+    const at=new Date($('stopAt').value).getTime(), sec=timerSeconds(t);
+    if(!tid||!sid||!at||sec<=0){toast('Complete the session details before saving');return;}
+    if(type==='problem'&&pid==='__new__'){
+      const name=$('stopNewProblem').value.trim(); if(!name){$('stopNewProblemWrap').classList.remove('hidden');$('stopNewProblem').focus();toast('Enter the new problem name');return;}
+      pid=await createProblem(tid,sid,{name});
+    }
+    if(type==='problem'&&!pid){toast('Select a problem');return;}
+    const p=pid?problem(tid,sid,pid):null;
+    const s={type,mode:'live',problemId:type==='problem'?pid:null,topicId:tid,subtopicId:sid,topicName:topic(tid)?.name||'',subtopicName:sub(tid,sid)?.name||'',problemName:type==='problem'?(p?.name||t.problemName||''):null,label:type==='study'?$('stopLabel').value.trim():'',status:type==='problem'?$('stopStatus').value:null,startedAt:at,durationSeconds:sec,notes:$('stopNotes').value.trim()};
+    await createSession(s); await store.root.child('activeTimer').remove(); store.activeTimer=null; saveLocalTimer(null); closeModal('stopModal'); navigate('timeline'); toast('Session saved to your journey');
+  }
+  async function discardTimer(){ if(!store.activeTimer)return; const ok=await askConfirm('Discard live session?','This removes the timer without creating a journey entry.',true); if(!ok)return; await store.root.child('activeTimer').remove();store.activeTimer=null;saveLocalTimer(null);closeModal('stopModal');renderAll();toast('Live session discarded'); }
+  function askConfirm(title,msg,danger=false){ return new Promise(resolve=>{ pendingResolve=resolve; $('confirmAction').className='btn '+(danger?'danger':'primary'); confirmAction(title,msg,()=>resolveConfirm(true)); }); }
+
+  async function handleSessionSubmit(e){ e.preventDefault(); const type=document.querySelector('input[name=sessionType]:checked').value,tid=$('sessTopic').value,sid=$('sessSubtopic').value; let pid=$('sessProblem').value; if(!tid||!sid){toast('Choose a topic and sub-topic');return;} if(type==='problem'){ if(pid==='__new__'){ const name=$('sessNewProblem').value.trim(); if(!name){$('sessNewProblemWrap').classList.remove('hidden');$('sessNewProblem').focus();toast('Enter the new problem name');return;} pid=await createProblem(tid,sid,{name}); } if(!pid){toast('Choose a problem');return;} } const p=pid?problem(tid,sid,pid):null; await startTimer({type,topicId:tid,subtopicId:sid,problemId:type==='problem'?pid:null,topicName:topic(tid)?.name||'',subtopicName:sub(tid,sid)?.name||'',problemName:type==='problem'?(p?.name||''):null,label:type==='study'?$('sessLabel').value.trim():'',status:type==='problem'?$('sessStatus').value:null,notes:$('sessNotes').value.trim()}); closeModal('sessionModal'); }
+  async function handleManualSubmit(e){ e.preventDefault(); const type=document.querySelector('input[name=manualType]:checked').value,tid=$('manualTopic').value,sid=$('manualSubtopic').value; let pid=$('manualProblem').value; const at=new Date($('manualAt').value).getTime(),sec=totalSeconds('manualHours','manualMinutes'); if(!tid||!sid||!at||sec<=0){toast('Enter a valid date/time, context and duration');return;} if(type==='problem'&&pid==='__new__'){const name=$('manualNewProblem').value.trim();if(!name){$('manualNewProblemWrap').classList.remove('hidden');$('manualNewProblem').focus();toast('Enter the new problem name');return;}pid=await createProblem(tid,sid,{name});} if(type==='problem'&&!pid){toast('Select a problem');return;} const p=pid?problem(tid,sid,pid):null; await createSession({type,mode:'manual',problemId:type==='problem'?pid:null,topicId:tid,subtopicId:sid,topicName:topic(tid)?.name||'',subtopicName:sub(tid,sid)?.name||'',problemName:type==='problem'?(p?.name||''):null,label:type==='study'?$('manualLabel').value.trim():'',status:type==='problem'?$('manualStatus').value:null,startedAt:at,durationSeconds:sec,notes:$('manualNotes').value.trim()}); closeModal('manualModal'); navigate('timeline'); toast('Manual session logged'); }
+
+  function openEditSession(sessionId){ const s=store.sessions[sessionId]; if(!s)return; store.editingSessionId=sessionId; $('editId').value=sessionId; $('editType').value=s.type; $('editModeLabel').textContent=s.mode==='live'?'Live':'Manual'; $('editAt').value=localInput(s.startedAt); const secs=Number(s.durationSeconds||0); $('editHours').value=Math.floor(secs/3600); $('editMinutes').value=Math.floor((secs%3600)/60); fillTopicSelect('editTopic',s.topicId); fillSubSelect('editTopic','editSubtopic',s.subtopicId,'editProblem',s.problemId||'',''); if(s.problemId&&!problem(s.topicId,s.subtopicId,s.problemId)){ fillProblemSelect('editProblem',s.topicId,s.subtopicId,s.problemId,'',s.problemName||'Deleted problem'); } $('editLabel').value=s.label||''; fillStatusSelect('editStatus',s.status||statuses()[0]); $('editNotes').value=s.notes||''; updateEditTypeUI(); openModal('editModal'); }
+  function recalcHoursMinutes(hId,mId,seconds){const h=Math.floor(Number(seconds||0)/3600),m=Math.floor(Number(seconds||0)%3600/60);$(hId).value=h;$(mId).value=m;}
+  async function saveEditedSession(e){
+    e.preventDefault();
+    const idd=store.editingSessionId,s=store.sessions[idd]; if(!s)return;
+    const type=$('editType').value,tid=$('editTopic').value,sid=$('editSubtopic').value,pid=$('editProblem').value,at=new Date($('editAt').value).getTime(),sec=totalSeconds('editHours','editMinutes');
+    if(!at||sec<=0||!tid||!sid){toast('Enter valid session details');return;}
+    if(type==='problem'&&(!pid||pid==='__new__')){toast('Choose a problem');return;}
+    const p=pid?problem(tid,sid,pid):null;
+    const fallbackName=type==='problem'?(p?.name||s.problemName||''):null;
+    const updates={type,topicId:tid,subtopicId:sid,topicName:topic(tid)?.name||'',subtopicName:sub(tid,sid)?.name||'',problemId:type==='problem'?pid:null,problemName:fallbackName,label:type==='study'?$('editLabel').value.trim():'',status:type==='problem'?$('editStatus').value:null,startedAt:at,durationSeconds:sec,notes:$('editNotes').value.trim(),updatedAt:ts()};
+    const oldPid=s.problemId;
+    // Every edit is applied AND, in the same atomic multi-path write, the pre-edit snapshot is
+    // pushed into an append-only revision log at history/{sessionId}/{revisionId}. The security
+    // rules make history entries write-once: a revision, once pushed, can never be changed or
+    // removed by any client. Nothing about an edit is ever silently lost.
+    const revId=store.root.child(`history/${idd}`).push().key;
+    const combined={};
+    for(const [k,v] of Object.entries(updates)) combined[`sessions/${idd}/${k}`]=v;
+    combined[`history/${idd}/${revId}`]={...s,revisedAt:firebase.database.ServerValue.TIMESTAMP};
+    await store.root.update(combined);
+    if(oldPid&&oldPid!==updates.problemId) await refreshProblemLatest(oldPid);
+    if(updates.problemId) await refreshProblemLatest(updates.problemId);
+    closeModal('editModal'); toast('Journey entry updated — previous version kept in history');
+  }
+  async function deleteSession(sessionId){
+    const s=store.sessions[sessionId]; if(!s||s.deletedAt)return;
+    const ok=await askConfirm('Move to trash?','This moves the entry to Trash (Settings). It is never hard-deleted by this app — restore it any time.',true);
+    if(!ok)return;
+    await store.root.child(`sessions/${sessionId}`).update({deletedAt:firebase.database.ServerValue.TIMESTAMP,deletedBy:store.user?.uid||null});
+    if(s.problemId) await refreshProblemLatest(s.problemId);
+    closeModal('editModal'); toast('Moved to trash — restore it anytime from Settings');
+  }
+  async function restoreSession(sessionId){
+    const s=store.sessions[sessionId]; if(!s||!s.deletedAt)return;
+    await store.root.child(`sessions/${sessionId}`).update({deletedAt:null,deletedBy:null});
+    if(s.problemId) await refreshProblemLatest(s.problemId);
+    toast('Restored to your journey');
+  }
+
+  function openItem(kind,{tid='',sid='',pid=''}={}){ $('itemForm').reset(); $('itemKind').value=kind;$('itemTopicId').value=tid;$('itemSubId').value=sid;$('itemId').value=pid; const editing=!!(kind==='topic'?tid:kind==='subtopic'?sid:pid), isProblem=kind==='problem'; $('itemModalTitle').textContent=(editing?'Edit ':'Add ')+(kind==='subtopic'?'sub-topic':kind); $('itemModalSub').textContent=kind==='problem'?'Manage difficulty, link, tags and personal notes here.':'Keep your curriculum hierarchy clean and ordered.'; ['difficultyField','linkField','tagsField','notesField'].forEach(id=>$(id).classList.toggle('hidden',!isProblem)); if(kind==='topic'&&tid) $('itemName').value=topic(tid)?.name||''; if(kind==='subtopic'&&sid) $('itemName').value=sub(tid,sid)?.name||''; if(kind==='problem'&&pid){const p=problem(tid,sid,pid)||{};$('itemName').value=p.name||'';$('itemDifficulty').value=p.difficulty||'Easy';$('itemLink').value=p.link||'';$('itemTags').value=(p.tags||[]).join(', ');$('itemNotes').value=p.notes||'';} openModal('itemModal'); }
+  async function saveItem(e){
+    e.preventDefault();
+    const kind=$('itemKind').value, tid=$('itemTopicId').value, sid=$('itemSubId').value, pid=$('itemId').value;
+    const name=$('itemName').value.trim();
+    if(!name){ toast('Name is required'); return; }
+    if(kind==='topic'){
+      if(tid){
+        await store.root.child(`curriculum/${tid}`).update({name,updatedAt:ts()});
+      }else{
+        const arr=topicArr(), n=id('t');
+        const value={name,order:arr.length+1,subtopics:{},createdAt:ts(),updatedAt:ts()};
+        await store.root.child(`curriculum/${n}`).set(value);
+        store.curriculum[n]=value;
+        store.expandedTopics.add(n);
+      }
+      await dbSet('meta/curriculumInitialized',true);
+    } else if(kind==='subtopic'){
+      if(!tid){ toast('Choose a topic first'); return; }
+      if(sid){
+        await store.root.child(`curriculum/${tid}/subtopics/${sid}`).update({name,updatedAt:ts()});
+      }else{
+        const arr=subArr(topic(tid)), n=id('s');
+        const value={name,order:arr.length+1,problems:{},createdAt:ts(),updatedAt:ts()};
+        await store.root.child(`curriculum/${tid}/subtopics/${n}`).set(value);
+        store.curriculum[tid].subtopics=store.curriculum[tid].subtopics||{};
+        store.curriculum[tid].subtopics[n]=value;
+        store.expandedTopics.add(tid);
+        store.expandedSubs.add(`${tid}:${n}`);
+      }
+      await dbSet('meta/curriculumInitialized',true);
+    } else {
+      if(!tid||!sid){ toast('Choose a topic and sub-topic'); return; }
+      const targetId=pid||id('p');
+      const ex=problem(tid,sid,pid);
+      const p={
+        name,
+        difficulty:$('itemDifficulty').value,
+        link:safeUrl($('itemLink').value),
+        tags:$('itemTags').value.split(',').map(x=>x.trim()).filter(Boolean),
+        notes:$('itemNotes').value.trim(),
+        order:ex?.order||probArr(sub(tid,sid)).length+1,
+        latestStatus:ex?.latestStatus||'Not Touched',
+        createdAt:ex?.createdAt||ts(),
+        updatedAt:ts()
+      };
+      await store.root.child(`curriculum/${tid}/subtopics/${sid}/problems/${targetId}`).set(p);
+      store.curriculum[tid].subtopics[sid].problems=store.curriculum[tid].subtopics[sid].problems||{};
+      store.curriculum[tid].subtopics[sid].problems[targetId]=p;
+      store.expandedTopics.add(tid);
+      store.expandedSubs.add(`${tid}:${sid}`);
+      await dbSet('meta/curriculumInitialized',true);
+    }
+    renderAll();
+    closeModal('itemModal');
+    toast('Curriculum saved');
+  }
+
+  async function moveItem(kind,tid,sid,pid,dir){ let arr=[],base=''; if(kind==='topic'){arr=topicArr();base='curriculum';} else if(kind==='subtopic'){arr=subArr(topic(tid));base=`curriculum/${tid}/subtopics`;} else {arr=probArr(sub(tid,sid));base=`curriculum/${tid}/subtopics/${sid}/problems`;} const idx=arr.findIndex(x=>x.id===(kind==='topic'?tid:kind==='subtopic'?sid:pid)),j=idx+dir;if(idx<0||j<0||j>=arr.length)return; const updates={}; updates[`/${base}/${arr[idx].id}/order`]=arr[j].order||j+1;updates[`/${base}/${arr[j].id}/order`]=arr[idx].order||idx+1;await dbUpdate(updates); await dbSet('meta/curriculumInitialized',true); }
+  async function deleteCurriculum(kind,tid,sid,pid){ const message=kind==='topic'?'Delete this topic and all child curriculum items? Historical sessions will remain.':kind==='subtopic'?'Delete this sub-topic and its problems? Historical sessions will remain.':'Delete this problem from the curriculum? Historical sessions will remain.'; const ok=await askConfirm('Delete curriculum item?',message,true); if(!ok)return; const path=kind==='topic'?`curriculum/${tid}`:kind==='subtopic'?`curriculum/${tid}/subtopics/${sid}`:`curriculum/${tid}/subtopics/${sid}/problems/${pid}`; await store.root.child(path).remove(); await dbSet('meta/curriculumInitialized',true); toast('Curriculum item deleted'); }
+
+  function openCurriculumJson(){ const editor=$('curriculumJsonEditor'); editor.value=JSON.stringify(store.curriculum||{},null,2); $('jsonStatus').textContent='Editing the live curriculum object currently loaded from Firebase.'; $('jsonStatus').style.color='var(--muted)'; openModal('jsonModal'); setTimeout(()=>editor.focus(),0); }
+  async function reloadCurriculumJson(){ try{ const latest=await dbGet('curriculum'); $('curriculumJsonEditor').value=JSON.stringify(latest||{},null,2); $('jsonStatus').textContent='Reloaded the current curriculum from Firebase.'; $('jsonStatus').style.color='var(--green)'; }catch(err){ $('jsonStatus').textContent='Could not reload live data: '+err.message; $('jsonStatus').style.color='var(--red)'; } }
+  function validateCurriculumObject(curr){ if(!curr || typeof curr!=='object' || Array.isArray(curr)) throw new Error('Root must be a JSON object of topics.'); const topicEntries=Object.entries(curr); for(const [tid,t] of topicEntries){ if(!SAFE_ID.test(tid)) throw new Error(`Topic key "${tid}" must be 1-64 chars of letters, numbers, "_", "-" or "."`); if(!t || typeof t!=='object' || !String(t.name||'').trim()) throw new Error(`Invalid topic: ${tid}`); if(t.subtopics!=null && (typeof t.subtopics!=='object'||Array.isArray(t.subtopics))) throw new Error(`Topic ${t.name}: subtopics must be an object`); for(const [sid,s] of Object.entries(t.subtopics||{})){ if(!SAFE_ID.test(sid)) throw new Error(`Sub-topic key "${sid}" must be 1-64 chars of letters, numbers, "_", "-" or "."`); if(!s||typeof s!=='object'||!String(s.name||'').trim()) throw new Error(`Invalid sub-topic: ${tid}/${sid}`); if(s.problems!=null&&(typeof s.problems!=='object'||Array.isArray(s.problems))) throw new Error(`Sub-topic ${s.name}: problems must be an object`); for(const [pid,p] of Object.entries(s.problems||{})){ if(!SAFE_ID.test(pid)) throw new Error(`Problem key "${pid}" must be 1-64 chars of letters, numbers, "_", "-" or "."`); if(!p||typeof p!=='object'||!String(p.name||'').trim()) throw new Error(`Invalid problem: ${tid}/${sid}/${pid}`); if(p.tags!=null&&!Array.isArray(p.tags)) throw new Error(`Problem ${p.name}: tags must be an array`); if(p.order!=null&&!Number.isFinite(Number(p.order))) throw new Error(`Problem ${p.name}: order must be numeric`); if(p.link&&!safeUrl(p.link)) throw new Error(`Problem ${p.name}: link must be a valid http(s) URL`); if(p.youtubeUrl&&!safeUrl(p.youtubeUrl)) throw new Error(`Problem ${p.name}: youtubeUrl must be a valid http(s) URL`); } } } return true; }
+  function validateSessionsObject(sessions){ if(!sessions||typeof sessions!=='object'||Array.isArray(sessions)) throw new Error('sessions must be a JSON object keyed by session id.'); for(const [sid,s] of Object.entries(sessions)){ if(!SAFE_ID.test(sid)&&!/^-[A-Za-z0-9_-]{1,40}$/.test(sid)) throw new Error(`Session key "${sid}" has an unsafe format`); if(!s||typeof s!=='object') throw new Error(`Invalid session: ${sid}`); if(!Number.isFinite(Number(s.startedAt))) throw new Error(`Session ${sid}: startedAt must be a timestamp`); if(!Number.isFinite(Number(s.durationSeconds))||Number(s.durationSeconds)<0) throw new Error(`Session ${sid}: durationSeconds must be a non-negative number`); if(!['problem','study'].includes(s.type)) throw new Error(`Session ${sid}: type must be "problem" or "study"`); } return true; }
+  function formatCurriculumJson(){ try{ const obj=JSON.parse($('curriculumJsonEditor').value); validateCurriculumObject(obj); $('curriculumJsonEditor').value=JSON.stringify(obj,null,2); $('jsonStatus').textContent=`Valid curriculum JSON · ${Object.keys(obj).length} topics`; $('jsonStatus').style.color='var(--green)'; }catch(err){ $('jsonStatus').textContent='Invalid JSON: '+err.message; $('jsonStatus').style.color='var(--red)'; } }
+  async function applyCurriculumJson(){ try{ const obj=JSON.parse($('curriculumJsonEditor').value); validateCurriculumObject(obj); const ok=await askConfirm('Apply curriculum JSON?','This replaces only the curriculum tree. Your journey history and active timer remain untouched.',true); if(!ok)return; await dbSet('curriculum',obj); await dbSet('meta/curriculumInitialized',true); store.expandedTopics.clear(); store.expandedSubs.clear(); closeModal('jsonModal'); toast('Curriculum JSON applied'); }catch(err){ $('jsonStatus').textContent='Not applied: '+err.message; $('jsonStatus').style.color='var(--red)'; } }
+  function reorderSiblings(arr, fromId, toId){ const copy=arr.slice(); const from=copy.findIndex(x=>x.id===fromId),to=copy.findIndex(x=>x.id===toId); if(from<0||to<0||from===to)return copy; const [item]=copy.splice(from,1); copy.splice(to,0,item); return copy; }
+  async function dropReorder(kind,srcTid,srcSid,srcPid,targetTid,targetSid,targetPid){ let arr,base; if(kind==='topic'){arr=topicArr();base='curriculum';} else if(kind==='subtopic'){ if(srcTid!==targetTid)return; arr=subArr(topic(srcTid));base=`curriculum/${srcTid}/subtopics`; } else { if(srcTid!==targetTid||srcSid!==targetSid)return; arr=probArr(sub(srcTid,srcSid));base=`curriculum/${srcTid}/subtopics/${srcSid}/problems`; } const src=kind==='topic'?srcTid:kind==='subtopic'?srcSid:srcPid; const target=kind==='topic'?targetTid:kind==='subtopic'?targetSid:targetPid; const next=reorderSiblings(arr,src,target); if(next.map(x=>x.id).join('|')===arr.map(x=>x.id).join('|'))return; const updates={}; next.forEach((x,i)=>updates[`/${base}/${x.id}/order`]=i+1); await dbUpdate(updates); await dbSet('meta/curriculumInitialized',true); }
+
+  function renderAll(){ fillAllFormSelects(); renderDashboard(); renderCurriculum(); renderTimeline(); renderTimer(); renderStatusEditor(); renderAnalytics(); renderHealthSnapshot(); renderTrash(); }
+  function renderTrash(){
+    const box=$('trashList'); if(!box)return;
+    const list=trashedSessionArr();
+    box.innerHTML=list.length?list.map(s=>`<div class="trash-item"><div class="ti-main"><div class="ti-title">${esc(sessionTitle(s))}</div><div class="ti-sub">${esc(fmtDateTime(s.startedAt))} · ${esc(fmtDuration(s.durationSeconds))} · trashed ${esc(fmtDateTime(s.deletedAt))}</div></div><button class="btn small" data-action="restore-entry" data-id="${esc(s.id)}">Restore</button></div>`).join('') : '<div class="health-empty">Trash is empty.</div>';
+  }
+  function scheduleRender(){ if(store.renderQueued)return; store.renderQueued=true; requestAnimationFrame(()=>{store.renderQueued=false; renderAll();}); }
+  function renderDashboard(){
+    const arr=sessionArr().sort((a,b)=>Number(b.startedAt)-Number(a.startedAt)); const nowMs=ts(),today=startOfDay(nowMs),week=mondayStart(nowMs); const all=arr.reduce((n,s)=>n+Number(s.durationSeconds||0),0); const td=arr.filter(s=>Number(s.startedAt)>=today).reduce((n,s)=>n+Number(s.durationSeconds||0),0); const wk=arr.filter(s=>Number(s.startedAt)>=week).reduce((n,s)=>n+Number(s.durationSeconds||0),0); $('statAllTime').textContent=fmtDuration(all);$('statToday').textContent=fmtDuration(td);$('statWeek').textContent=fmtDuration(wk); const streak=calcStreak(arr);$('statStreak').textContent=`${streak.current}d`;$('statLongest').textContent=`longest ${streak.longest}d`;
+    const totals=allProblems().length; const touched=new Set(arr.filter(s=>s.problemId).map(s=>s.problemId)); const solved=new Set(arr.filter(s=>s.type==='problem'&&isSolved(s.status)).map(s=>s.problemId)); $('countTotal').textContent=totals;$('countTouched').textContent=touched.size;$('countSolved').textContent=solved.size;
+    const byDay={}; arr.forEach(s=>{const k=dayKey(s.startedAt);byDay[k]=(byDay[k]||0)+Number(s.durationSeconds||0);});
+    const endDate=new Date(startOfDay(nowMs)); const sundayEnd=new Date(endDate); sundayEnd.setDate(sundayEnd.getDate()+((7-sundayEnd.getDay())%7)); const startDate=new Date(sundayEnd); startDate.setDate(startDate.getDate()-181);
+    const monthSpans=[]; let lastMonth=''; for(let c=0;c<26;c++){const wd=new Date(startDate);wd.setDate(wd.getDate()+c*7);const label=wd.toLocaleDateString([], {month:'short'});monthSpans.push(`<span>${label!==lastMonth?esc(label):''}</span>`);lastMonth=label;}
+    const heatCells=[]; const names=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; for(let r=0;r<7;r++){heatCells.push(`<div class="heat-day-label">${[0,1,3,5].includes(r)?names[r]:''}</div>`); for(let c=0;c<26;c++){const d=new Date(startDate);d.setDate(d.getDate()+c*7+r);const k=dayKey(d.getTime()),sec=byDay[k]||0,level=sec===0?0:sec<1800?1:sec<3600?2:sec<7200?3:4;heatCells.push(`<div class="heat-cell l${level}" title="${k} · ${fmtDuration(sec)}" data-day="${k}" role="button" tabindex="0"></div>`);}}
+    $('heatmap').innerHTML=`<div class="heat-month-labels"><span></span>${monthSpans.join('')}</div><div class="heat-grid">${heatCells.join('')}</div>`;
+    $('heatTotal').textContent=fmtDuration(Object.values(byDay).reduce((a,b)=>a+b,0));
+    $('topicProgress').innerHTML=topicArr().map(t=>{const probs=[];for(const s of subArr(t))probs.push(...probArr(s));const solvedCount=probs.filter(p=>isSolved(derivedStatus(p.id))).length;const pct=probs.length?Math.round(solvedCount/probs.length*100):0;const touchedCount=probs.filter(p=>derivedStatus(p.id)!=='Not Touched').length;return `<div class="tp"><span>${esc(t.name)}</span><div class="progress"><span style="width:${pct}%"></span></div><b>${solvedCount} solved · ${touchedCount} touched</b></div>`;}).join('')||'<div class="empty">No topics yet.</div>';
+    const revisit=allProblems().filter(x=>isRevisit(derivedStatus(x.problem.id))).slice(0,8);$('revisitList').innerHTML=revisit.length?revisit.map(x=>`<div class="revisit-item"><div class="revisit-title">${esc(x.problem.name)}</div><div class="revisit-sub">${esc(x.topic.name)} · ${esc(x.sub.name)}</div><div class="revisit-actions"><button class="btn small" data-action="revisit-start" data-tid="${x.topic.id}" data-sid="${x.sub.id}" data-pid="${x.problem.id}">Start session</button><button class="btn small ghost" data-action="revisit-edit" data-tid="${x.topic.id}" data-sid="${x.sub.id}" data-pid="${x.problem.id}">Edit</button></div></div>`).join(''):'<div class="empty">Nothing marked for revisit.</div>';
+    $('recentMini').innerHTML=arr.slice(0,5).map(s=>`<div class="problem" style="padding-left:0;padding-right:0"><div class="problem-info"><div class="problem-name">${esc(sessionTitle(s))}</div><div class="problem-meta"><span class="pill">${esc(fmtDateTime(s.startedAt))}</span><span class="pill">${esc(fmtDuration(s.durationSeconds))}</span></div></div><span class="pill">${esc(s.mode==='live'?'LIVE':'MANUAL')}</span></div>`).join('')||'<div class="empty">No sessions yet.</div>';
+  }
+  function calcStreak(arr){ const days=[...new Set(arr.map(s=>dayKey(s.startedAt)))].sort(); if(!days.length)return{current:0,longest:0}; const set=new Set(days); let longest=0,run=0; for(let i=0;i<days.length;i++){if(i===0||dayDiff(days[i-1],days[i])===1)run++;else run=1;longest=Math.max(longest,run);} const today=dayKey(ts()),y=new Date();y.setDate(y.getDate()-1); const anchor=set.has(today)?today:set.has(dayKey(y.getTime()))?dayKey(y.getTime()):null; let current=0;if(anchor){let d=anchor;while(set.has(d)){current++;const dt=new Date(d+'T00:00:00');dt.setDate(dt.getDate()-1);d=dayKey(dt.getTime());}} return{current,longest}; }
+  function dayDiff(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);}
+  function weekKey(ms){const d=new Date(mondayStart(ms));return dayKey(d.getTime());}
+  function fmtWeek(ms){const a=new Date(mondayStart(ms));const b=new Date(a);b.setDate(b.getDate()+6);return `${a.toLocaleDateString([], {month:'short',day:'numeric'})} – ${b.toLocaleDateString([], {month:'short',day:'numeric',year:'numeric'})}`;}
+
+  function renderAnalytics(){
+    const arr=sessionArr();
+    const now=mondayStart(ts());
+    const weeks=[];
+    for(let i=11;i>=0;i--){ const d=new Date(now); d.setDate(d.getDate()-i*7); weeks.push({start:d.getTime(),label:d.toLocaleDateString([], {month:'short',day:'numeric'})}); }
+    const weekly=weeks.map(w=>({label:w.label,sec:arr.filter(s=>{const st=mondayStart(s.startedAt);return st===w.start;}).reduce((n,s)=>n+Number(s.durationSeconds||0),0)}));
+    const max=Math.max(1,...weekly.map(x=>x.sec));
+    $('velocityChart').innerHTML=weekly.map(x=>`<div class="velocity-col"><div class="velocity-value">${esc(fmtDuration(x.sec))}</div><div class="velocity-bar" title="${esc(x.label+' · '+fmtDuration(x.sec))}"><span style="height:${Math.max(2,Math.round(x.sec/max*100))}%"></span></div><div class="velocity-label">${esc(x.label)}</div></div>`).join('');
+    $('velocityTotal').textContent=fmtDuration(weekly.reduce((n,x)=>n+x.sec,0));
+    const probs=allProblems(); const counts={}; probs.forEach(p=>{const st=derivedStatus(p.problem.id);counts[st]=(counts[st]||0)+1;}); const total=probs.length||1;
+    $('statusMix').innerHTML=statuses().map(st=>{const c=counts[st]||0; const pct=Math.round(c/total*100);return `<div class="status-mix-row"><span>${esc(st)}</span><div class="progress"><span style="width:${pct}%"></span></div><b>${c}</b></div>`;}).join('')||'<div class="empty">No problems yet.</div>';
+    $('statusMixTotal').textContent=`${probs.length} problems`;
+  }
+  function auditData(){
+    const topicIds=new Set(topicArr().map(t=>t.id)); const subIds=new Set(); const probIds=new Set(); let malformed=0;
+    for(const t of topicArr()){ if(!String(t.name||'').trim())malformed++; for(const s of subArr(t)){ subIds.add(`${t.id}/${s.id}`); if(!String(s.name||'').trim())malformed++; for(const p of probArr(s)){ probIds.add(p.id); if(!String(p.name||'').trim())malformed++; } } }
+    let orphan=0,invalid=0; for(const s of sessionArr()){ if(s.type==='problem'){if(!s.problemId||!problemById(s.problemId))orphan++;} if(!Number.isFinite(Number(s.startedAt))||!Number.isFinite(Number(s.durationSeconds))||Number(s.durationSeconds)<0)invalid++; }
+    const duplicateIds=probIds.size===allProblems().length?0:(allProblems().length-probIds.size);
+    const timer=store.activeTimer?'Active timer present':'No active timer';
+    store.lastAudit={topics:topicArr().length,problems:allProblems().length,sessions:sessionArr().length,orphan,invalid,malformed,duplicateIds,timer,at:ts()};
+    renderHealthSnapshot();
+    return store.lastAudit;
+  }
+  function renderHealthSnapshot(){
+    const a=store.lastAudit; const box=$('dataHealth'); if(!box)return; if(!a){box.innerHTML='<div class="health-empty">Audit not run yet.</div>';return;}
+    const cards=[['Topics',a.topics,'Curriculum nodes','health-ok'],['Problems',a.problems,'Curriculum problems','health-ok'],['Sessions',a.sessions,'Journey entries','health-ok'],['Orphan sessions',a.orphan,'Problem sessions pointing to missing problems',a.orphan?'health-warn':'health-ok'],['Invalid sessions',a.invalid,'Invalid date/duration values',a.invalid?'health-bad':'health-ok'],['Malformed curriculum',a.malformed,'Missing required names or structures',a.malformed?'health-bad':'health-ok'],['Duplicate IDs',a.duplicateIds,'Problem ID collisions',a.duplicateIds?'health-warn':'health-ok'],['Timer',a.timer,'Persisted active timer state','health-ok']];
+    box.innerHTML=cards.map(c=>`<div class="health-card ${c[3]}"><div class="health-k">${esc(c[0])}</div><div class="health-v">${esc(c[1])}</div><div class="health-s">${esc(c[2])}</div></div>`).join('')+`<div class="helper" style="grid-column:1/-1">Last audit: ${esc(fmtDateTime(a.at))}</div>`;
+  }
+  function runGlobalSearch(term){
+    const q=String(term||'').trim().toLowerCase(); const out=[]; if(!q){$('globalSearchResults').innerHTML='<div class="empty">Type to search problems and journey history.</div>';return;}
+    for(const x of allProblems()){const hay=`${x.problem.name} ${x.topic.name} ${x.sub.name} ${(x.problem.tags||[]).join(' ')}`.toLowerCase();if(hay.includes(q))out.push({kind:'problem',title:x.problem.name,sub:`${x.topic.name} · ${x.sub.name} · ${derivedStatus(x.problem.id)}`,tid:x.topic.id,sid:x.sub.id,pid:x.problem.id});}
+    for(const s of sessionArr()){const hay=`${sessionTitle(s)} ${s.notes||''} ${s.topicName||''} ${s.subtopicName||''}`.toLowerCase();if(hay.includes(q))out.push({kind:'session',title:sessionTitle(s),sub:`${fmtDateTime(s.startedAt)} · ${fmtDuration(s.durationSeconds)} · ${s.status||s.label||'Session'}`,id:s.id});}
+    const limited=out.slice(0,60); $('globalSearchResults').innerHTML=limited.length?limited.map(r=>`<div class="search-result"><div class="search-result-main"><div class="search-result-title">${esc(r.title)}</div><div class="search-result-sub">${esc(r.sub)}</div></div><div class="search-result-action"><button class="btn small" data-search-kind="${r.kind}" data-tid="${r.tid||''}" data-sid="${r.sid||''}" data-pid="${r.pid||''}" data-id="${r.id||''}">${r.kind==='problem'?'Open':'Edit'}</button></div></div>`).join(''):`<div class="empty">No results.</div>`;
+  }
+
+  function renderCurriculum(){
+    const q=String($('curriculumSearch')?.value||'').trim().toLowerCase(); const html=topicArr().map(t=>{ const subs=subArr(t); const topicMatch=t.name.toLowerCase().includes(q); const filteredSubs=subs.filter(s=>topicMatch||s.name.toLowerCase().includes(q)||probArr(s).some(p=>p.name.toLowerCase().includes(q)||((p.tags||[]).join(' ').toLowerCase().includes(q)))); if(q&&!topicMatch&&!filteredSubs.length)return ''; const open=q||store.expandedTopics.has(t.id); const total=subs.reduce((n,s)=>n+probArr(s).length,0); const solved=subs.reduce((n,s)=>n+probArr(s).filter(p=>isSolved(derivedStatus(p.id))).length,0); return `<div class="topic"><div class="topic-head" draggable="true" data-drag-kind="topic" data-tid="${t.id}"><div class="drag-handle" title="Drag to reorder" draggable="true" data-drag-handle="1">⠿</div><button class="topic-toggle" data-toggle-topic="${t.id}"><span class="chev">${open?'▾':'▸'}</span><span class="topic-name">${esc(t.name)}</span><span class="topic-meta">${solved}/${total} solved</span></button><div class="topic-actions"><button class="btn icon small" title="Edit" data-action="edit-topic" data-tid="${t.id}">✎</button><button class="btn icon small" title="Add sub-topic" data-action="add-sub" data-tid="${t.id}">＋</button><button class="btn icon small danger" title="Delete" data-action="delete-topic" data-tid="${t.id}">×</button></div></div>${open?`<div class="topic-body">${filteredSubs.map(s=>renderSub(t,s,q,topicMatch)).join('')||'<div class="empty" style="margin-top:10px">No matching sub-topics or problems.</div>'}<div style="margin-top:10px"><button class="btn small" data-action="add-sub" data-tid="${t.id}">＋ Add sub-topic</button></div></div>`:''}</div>`; }).join(''); $('curriculumTree').innerHTML=html||'<div class="empty">No curriculum items match your search.</div>';
+  }
+  function renderSub(t,s,q,topicMatch){ const probs=probArr(s), open=q||store.expandedSubs.has(`${t.id}:${s.id}`); const subMatch=s.name.toLowerCase().includes(q); const visible=probs.filter(p=>topicMatch||subMatch||p.name.toLowerCase().includes(q)||((p.tags||[]).join(' ').toLowerCase().includes(q))); if(q&&!subMatch&&!topicMatch&&!visible.length)return ''; return `<div class="subtopic"><div class="sub-head" draggable="true" data-drag-kind="subtopic" data-tid="${t.id}" data-sid="${s.id}"><div class="drag-handle" title="Drag to reorder" draggable="true" data-drag-handle="1">⠿</div><button class="sub-toggle" data-toggle-sub="${t.id}:${s.id}"><span class="chev">${open?'▾':'▸'}</span><span class="sub-name">${esc(s.name)}</span><span class="sub-count">${probs.length} problems</span></button><div class="sub-actions"><button class="btn icon small" title="Edit" data-action="edit-sub" data-tid="${t.id}" data-sid="${s.id}">✎</button><button class="btn icon small" title="Add problem" data-action="add-problem" data-tid="${t.id}" data-sid="${s.id}">＋</button><button class="btn icon small danger" title="Delete" data-action="delete-sub" data-tid="${t.id}" data-sid="${s.id}">×</button></div></div>${open?`<div class="problem-list">${visible.map(p=>renderProblem(t,s,p)).join('')||'<div class="empty" style="margin:8px">No matching problems.</div>'}</div>`:''}</div>`; }
+  function renderProblem(t,s,p){ const st=derivedStatus(p.id); const tags=(p.tags||[]).slice(0,4).map(x=>`<span class="pill">${esc(x)}</span>`).join(''); return `<div class="problem" draggable="true" data-drag-kind="problem" data-tid="${t.id}" data-sid="${s.id}" data-pid="${p.id}"><div class="drag-handle" title="Drag to reorder" draggable="true" data-drag-handle="1">⠿</div><div class="problem-info"><div class="problem-name">${esc(p.name)}</div><div class="problem-meta"><span class="pill ${difficultyClass(p.difficulty)}">${esc(p.difficulty||'—')}</span><span class="pill ${statusClass(st)}">${esc(st)}</span>${tags}${safeUrl(p.link)?`<a class="pill" href="${esc(safeUrl(p.link))}" target="_blank" rel="noopener noreferrer">LeetCode ↗</a>`:''}${safeUrl(p.youtubeUrl)?`<a class="pill" href="${esc(safeUrl(p.youtubeUrl))}" target="_blank" rel="noopener noreferrer">Striver ↗</a>`:''}</div></div><div class="problem-actions"><button class="btn small" title="Start live session" data-action="start-problem" data-tid="${t.id}" data-sid="${s.id}" data-pid="${p.id}">▶</button><button class="btn small" title="Edit problem" data-action="edit-problem" data-tid="${t.id}" data-sid="${s.id}" data-pid="${p.id}">✎</button><button class="btn small danger" title="Delete problem" data-action="delete-problem" data-tid="${t.id}" data-sid="${s.id}" data-pid="${p.id}">×</button></div></div>`; }
+
+  function sessionTitle(s){ if(s.type==='problem')return s.problemName||'Problem session'; return s.label||'General Study'; }
+  function renderTimeline(){
+    const list=sessionArr().sort((a,b)=>Number(b.startedAt)-Number(a.startedAt)); const term=String($('filterSearch')?.value||'').trim().toLowerCase(),ft=$('filterTopic')?.value||'',fy=$('filterType')?.value||'',fs=$('filterStatus')?.value||'',from=$('filterFrom')?.value||'',to=$('filterTo')?.value||''; const filtered=list.filter(s=>{if(ft&&s.topicId!==ft)return false;if(fy&&s.type!==fy)return false;if(fs&&s.status!==fs)return false;if(from&&dayKey(s.startedAt)<from)return false;if(to&&dayKey(s.startedAt)>to)return false;if(term&&!(`${sessionTitle(s)} ${s.notes||''} ${s.topicName||''} ${s.subtopicName||''}`.toLowerCase().includes(term)))return false;return true;}); $('timelineCount').textContent=`${filtered.length} / ${list.length}`; const mode=$('groupMode')?.value||'day'; const groups={}; filtered.forEach(s=>{const k=mode==='week'?weekKey(s.startedAt):dayKey(s.startedAt);(groups[k]||(groups[k]=[])).push(s);}); const html=Object.entries(groups).map(([k,items])=>{const ms=new Date(k+'T00:00:00').getTime();const label=mode==='week'?fmtWeek(ms):fmtDay(ms);return `<div class="day-group"><div class="day-title">${esc(label)}</div><div class="day-list">${items.map(renderEntry).join('')}</div></div>`;}).join(''); $('timeline').innerHTML=html||'<div class="empty">No sessions match these filters.</div>'; }
+  function renderEntry(s){ const icon=s.type==='problem'?'⌘':'◈', p=s.problemId?problemById(s.problemId):null, path=s.type==='problem'?[s.topicName||p?.topic?.name,s.subtopicName||p?.sub?.name,s.problemName||p?.problem?.name].filter(Boolean).join(' · '):[s.topicName,s.subtopicName].filter(Boolean).join(' · '); return `<div class="entry"><div class="entry-icon">${icon}</div><div class="entry-main"><div class="entry-top"><span class="entry-title">${esc(sessionTitle(s))}</span><span class="pill">${esc(s.mode==='live'?'LIVE':'MANUAL')}</span>${s.type==='problem'?`<span class="pill ${statusClass(s.status)}">${esc(s.status||'Not Touched')}</span>`:''}</div><div class="entry-path">${esc(path)} · ${esc(fmtDateTime(s.startedAt))}</div>${s.notes?(s.notes.length>180?`<details class="entry-notes"><summary style="cursor:pointer;color:var(--muted)">Show notes</summary>${esc(s.notes)}</details>`:`<div class="entry-notes">${esc(s.notes)}</div>`):''}</div><div class="entry-side"><div class="duration">${esc(fmtDuration(s.durationSeconds))}</div><div class="entry-actions"><button class="btn icon small" title="Edit" data-action="edit-entry" data-id="${s.id}">✎</button><button class="btn icon small danger" title="Move to trash" data-action="delete-entry" data-id="${s.id}">×</button></div></div></div>`; }
+
+  function renderTimer(){ const t=store.activeTimer; $('timerModePill').textContent=t?(t.isPaused?'Paused':'Running'):'Idle'; if(!t){$('timerContent').innerHTML='<div class="timer-card"><div class="timer-big">00:00:00</div><div class="subtle">Start a session from the top-right button, this page, or a specific problem in the curriculum.</div><div><button class="btn primary" id="timerStartBtnInner">▶ Start Session</button></div></div>';return;} const sec=timerSeconds(t), target=t.type==='problem'?problemById(t.problemId):null, title=t.type==='problem'?(target?.problem?.name||t.problemName):t.label||'General Study', path=[target?.topic?.name||topic(t.topicId)?.name,t.type==='problem'?(target?.sub?.name||sub(t.topicId,t.subtopicId)?.name):sub(t.topicId,t.subtopicId)?.name].filter(Boolean).join(' · '); $('timerContent').innerHTML=`<div class="timer-card"><div class="active-banner"><div class="active-left"><div class="pulse ${t.isPaused?'paused':''}"></div><div class="timer-meta"><div class="title">${esc(title)}</div><div class="path">${esc(path)}</div></div></div><span class="pill">${t.isPaused?'PAUSED':'LIVE'}</span></div><div class="timer-big">${clock(sec)}</div><div class="toolbar"><button class="btn" id="pauseResumeBtn">${t.isPaused?'Resume':'Pause'}</button><button class="btn primary" id="stopTimerBtn">Stop & Save</button><button class="btn danger" id="discardLiveBtn">Discard</button></div><div class="helper">Started ${esc(fmtDateTime(t.startedAt))} · ${t.isPaused?'Paused — time is not increasing.':'Running — time is increasing.'}</div></div>`; }
+
+  function renderStatusEditor(){ const list=statuses(); $('statusEditor').innerHTML=list.map((s,i)=>`<div class="status-row"><input value="${esc(s)}" maxlength="40" data-status-index="${i}"><span class="badge">${i===0?'default':''}</span><button class="btn small danger" data-action="delete-status" data-status-index="${i}">×</button></div>`).join(''); }
+  async function renameStatus(index,newName){ newName=newName.trim();const old=statuses()[index];if(!old||!newName||newName===old)return;if(statuses().includes(newName)){toast('That status already exists');renderStatusEditor();return;} const next=statuses().slice();next[index]=newName; await store.root.child('settings/statuses').set(next); const sem={...(store.settings.statusSemantics||{})}; if(Object.prototype.hasOwnProperty.call(sem,old)) { sem[newName]=sem[old]; delete sem[old]; } await store.root.child('settings/statusSemantics').set(sem); const updates={}; for(const [sid,s] of Object.entries(store.sessions)){if(s.status===old)updates[`sessions/${sid}/status`]=newName;} for(const p of allProblems()){if(p.problem.latestStatus===old)updates[`curriculum/${p.topic.id}/subtopics/${p.sub.id}/problems/${p.problem.id}/latestStatus`]=newName;} if(Object.keys(updates).length)await dbUpdate(updates); toast('Status renamed across the app'); }
+  async function deleteStatus(index){ const list=statuses(),name=list[index];if(!name)return;if(name==='Not Touched'){toast('Not Touched is required as the fallback status');return;} const used=sessionArr().some(s=>s.status===name)||allProblems().some(x=>x.problem.latestStatus===name);if(used){toast('That status is still in use and cannot be deleted');return;} const next=list.filter((_,i)=>i!==index);await store.root.child('settings/statuses').set(next);toast('Status removed'); }
+
+  // Curriculum/timeline/settings event wiring
+  let dragState=null;
+  document.addEventListener('dragstart',e=>{ const handle=e.target.closest('[data-drag-handle]'); const item=e.target.closest('[data-drag-kind]'); if(!handle||!item){ if(item)e.preventDefault(); return; } const kind=item.dataset.dragKind; dragState={kind,tid:item.dataset.tid||'',sid:item.dataset.sid||'',pid:item.dataset.pid||''}; item.classList.add('dragging'); if(e.dataTransfer){e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',JSON.stringify(dragState));} });
+  document.addEventListener('dragover',e=>{ const target=e.target.closest('[data-drag-kind]'); if(!dragState||!target||target.dataset.dragKind!==dragState.kind)return; if(dragState.kind==='subtopic'&&target.dataset.tid!==dragState.tid)return; if(dragState.kind==='problem'&&(target.dataset.tid!==dragState.tid||target.dataset.sid!==dragState.sid))return; e.preventDefault(); document.querySelectorAll('.drop-target').forEach(x=>x.classList.remove('drop-target')); target.classList.add('drop-target'); });
+  document.addEventListener('drop',async e=>{ const target=e.target.closest('[data-drag-kind]'); if(!dragState||!target)return; e.preventDefault(); document.querySelectorAll('.drop-target,.dragging').forEach(x=>x.classList.remove('drop-target','dragging')); const kind=dragState.kind; if(target.dataset.dragKind!==kind)return; if(kind==='topic' && target.dataset.tid===dragState.tid)return; if(kind==='subtopic' && (target.dataset.tid!==dragState.tid||target.dataset.sid===dragState.sid))return; if(kind==='problem' && (target.dataset.tid!==dragState.tid||target.dataset.sid!==dragState.sid||target.dataset.pid===dragState.pid))return; try{await dropReorder(kind,dragState.tid,dragState.sid,dragState.pid,target.dataset.tid||'',target.dataset.sid||'',target.dataset.pid||'');}catch(err){console.error(err);toast(err.message||'Could not reorder');} finally{dragState=null;} });
+  document.addEventListener('dragend',()=>{document.querySelectorAll('.drop-target,.dragging').forEach(x=>x.classList.remove('drop-target','dragging'));dragState=null;});
+  document.addEventListener('click',async e=>{ const heat=e.target.closest('.heat-cell[data-day]'); if(heat){ const d=heat.dataset.day; $('filterFrom').value=d; $('filterTo').value=d; navigate('timeline'); return; }
+
+    const nav=e.target.closest('[data-nav]'); if(nav){navigate(nav.dataset.nav);return;}
+    const closer=e.target.closest('[data-close]'); if(closer){closeModal(closer.dataset.close);return;}
+    const action=e.target.closest('[data-action]'); if(action){ const a=action.dataset.action,tid=action.dataset.tid,sid=action.dataset.sid,pid=action.dataset.pid,idv=action.dataset.id; try{
+      if(a==='add-sub')openItem('subtopic',{tid});
+      else if(a==='add-problem')openItem('problem',{tid,sid});
+      else if(a==='edit-topic')openItem('topic',{tid});
+      else if(a==='edit-sub')openItem('subtopic',{tid,sid});
+      else if(a==='edit-problem')openItem('problem',{tid,sid,pid});
+      else if(a==='start-problem')openSessionModal({type:'problem',topicId:tid,subtopicId:sid,problemId:pid});
+      else if(a==='revisit-start')openSessionModal({type:'problem',topicId:tid,subtopicId:sid,problemId:pid});
+      else if(a==='revisit-edit')openItem('problem',{tid,sid,pid});
+      else if(a==='delete-topic')await deleteCurriculum('topic',tid);
+      else if(a==='delete-sub')await deleteCurriculum('subtopic',tid,sid);
+      else if(a==='delete-problem')await deleteCurriculum('problem',tid,sid,pid);
+      else if(a==='edit-entry')openEditSession(idv);
+      else if(a==='delete-entry')await deleteSession(idv);
+      else if(a==='restore-entry')await restoreSession(idv);
+      else if(a==='delete-status')await deleteStatus(Number(action.dataset.statusIndex));
+    }catch(err){console.error(err);toast(err.message||'Action failed');} return; }
+    const tt=e.target.closest('[data-toggle-topic]'); if(tt){const v=tt.dataset.toggleTopic;store.expandedTopics.has(v)?store.expandedTopics.delete(v):store.expandedTopics.add(v);renderCurriculum();return;}
+    const st=e.target.closest('[data-toggle-sub]'); if(st){const v=st.dataset.toggleSub;store.expandedSubs.has(v)?store.expandedSubs.delete(v):store.expandedSubs.add(v);renderCurriculum();return;}
+    if(e.target.id==='pauseResumeBtn')togglePause(); else if(e.target.id==='stopTimerBtn')stopTimer(); else if(e.target.id==='discardLiveBtn')discardTimer(); else if(e.target.id==='timerStartBtnInner'||e.target.id==='timerQuickStart')openSessionModal(); else if(e.target.id==='timerQuickManual')openManual();
+  });
+
+  document.querySelectorAll('input[name=sessionType]').forEach(x=>x.addEventListener('change',updateSessionTypeUI));
+  document.querySelectorAll('input[name=manualType]').forEach(x=>x.addEventListener('change',updateManualTypeUI));
+  $('sessTopic').addEventListener('change',()=>fillSubSelect('sessTopic','sessSubtopic','','sessProblem','',''));
+  $('sessSubtopic').addEventListener('change',()=>fillProblemSelect('sessProblem',$('sessTopic').value,$('sessSubtopic').value,'',$('sessProblemSearch').value));
+  $('sessProblemSearch').addEventListener('input',()=>fillProblemSelect('sessProblem',$('sessTopic').value,$('sessSubtopic').value,'',$('sessProblemSearch').value));
+  $('sessProblem').addEventListener('change',()=>{$('sessNewProblemWrap').classList.toggle('hidden',$('sessProblem').value!=='__new__');});
+  $('manualTopic').addEventListener('change',()=>fillSubSelect('manualTopic','manualSubtopic','','manualProblem','',''));
+  $('manualSubtopic').addEventListener('change',()=>fillProblemSelect('manualProblem',$('manualTopic').value,$('manualSubtopic').value,'',$('manualProblemSearch').value));
+  $('manualProblemSearch').addEventListener('input',()=>fillProblemSelect('manualProblem',$('manualTopic').value,$('manualSubtopic').value,'',$('manualProblemSearch').value));
+  $('manualProblem').addEventListener('change',()=>{$('manualNewProblemWrap').classList.toggle('hidden',$('manualProblem').value!=='__new__');});
+  $('editType').addEventListener('change',updateEditTypeUI); $('editTopic').addEventListener('change',()=>fillSubSelect('editTopic','editSubtopic','','editProblem','','')); $('editSubtopic').addEventListener('change',()=>fillProblemSelect('editProblem',$('editTopic').value,$('editSubtopic').value,'',''));
+  guardSubmit($('sessionForm'),'submit-session',handleSessionSubmit); guardSubmit($('manualForm'),'submit-manual',handleManualSubmit); guardSubmit($('stopForm'),'submit-stop',finalizeTimer); guardSubmit($('editForm'),'submit-edit',saveEditedSession); guardSubmit($('itemForm'),'submit-item',saveItem); $('deleteEntryBtn').addEventListener('click',()=>deleteSession(store.editingSessionId)); $('discardTimerBtn').addEventListener('click',discardTimer); $('stopType').addEventListener('change',updateStopTypeUI); $('stopTopic').addEventListener('change',()=>fillSubSelect('stopTopic','stopSubtopic','','stopProblem','',$('stopProblemSearch').value)); $('stopSubtopic').addEventListener('change',()=>fillProblemSelect('stopProblem',$('stopTopic').value,$('stopSubtopic').value,'',$('stopProblemSearch').value)); $('stopProblemSearch').addEventListener('input',()=>fillProblemSelect('stopProblem',$('stopTopic').value,$('stopSubtopic').value,'',$('stopProblemSearch').value)); $('stopProblem').addEventListener('change',()=>{$('stopNewProblemWrap').classList.toggle('hidden',$('stopProblem').value!=='__new__');});
+  $('googleSignInBtn').addEventListener('click',signInWithGoogle);
+  $('linkGoogleBtn').addEventListener('click',linkGoogleAccount);
+  $('signOutBtn').addEventListener('click',signOutUser);
+  $('startHeaderBtn').addEventListener('click',()=>openSessionModal()); $('manualHeaderBtn').addEventListener('click',()=>openManual()); $('addTopicBtn').addEventListener('click',()=>openItem('topic')); $('timerQuickStart').addEventListener('click',()=>openSessionModal()); $('timerQuickManual').addEventListener('click',()=>openManual());
+  $('collapseAllBtn').addEventListener('click',()=>{store.expandedTopics.clear();store.expandedSubs.clear();renderCurriculum();}); $('curriculumJsonBtn').addEventListener('click',openCurriculumJson); $('jsonReloadBtn').addEventListener('click',reloadCurriculumJson); $('jsonFormatBtn').addEventListener('click',formatCurriculumJson); $('jsonApplyBtn').addEventListener('click',applyCurriculumJson); $('expandAllBtn').addEventListener('click',()=>{topicArr().forEach(t=>{store.expandedTopics.add(t.id);subArr(t).forEach(s=>store.expandedSubs.add(`${t.id}:${s.id}`));});renderCurriculum();});
+  $('curriculumSearch').addEventListener('input',renderCurriculum); $('clearCurriculumSearch').addEventListener('click',()=>{$('curriculumSearch').value='';renderCurriculum();});
+  ['filterSearch','filterTopic','filterType','filterStatus','filterFrom','filterTo','groupMode'].forEach(id=>$(id).addEventListener('input',renderTimeline)); $('clearFilters').addEventListener('click',()=>{['filterSearch','filterTopic','filterType','filterStatus','filterFrom','filterTo'].forEach(id=>$(id).value='');$('groupMode').value='day';renderTimeline();});
+  $('statusEditor').addEventListener('change',e=>{const i=e.target.dataset.statusIndex;if(i!==undefined)renameStatus(Number(i),e.target.value);});
+  $('syncOfficialBtn').addEventListener('click',withButtonLock($('syncOfficialBtn'),'sync-official',async()=>{try{await syncOfficialA2Z();}catch(err){console.error(err);toast(err.message||'Official A2Z sync failed');}}));
+  $('addStatusBtn').addEventListener('click',withButtonLock($('addStatusBtn'),'add-status',async()=>{const name=$('newStatusInput').value.trim();if(!name)return;if(statuses().includes(name)){toast('That status already exists');return;}await store.root.child('settings/statuses').set([...statuses(),name]);$('newStatusInput').value='';toast('Status added');}));
+  $('rebuildStatusesBtn').addEventListener('click',withButtonLock($('rebuildStatusesBtn'),'rebuild-statuses',async()=>{await rebuildStatuses();toast('Latest statuses rebuilt from session history');}));
+  $('exportJsonBtn').addEventListener('click',()=>{const payload={version:2,exportedAt:new Date().toISOString(),curriculum:store.curriculum,sessions:store.sessions,settings:{statuses:statuses()}};downloadText(JSON.stringify(payload,null,2),`dsa-journey-${dayKey(ts())}.json`,'application/json');});
+  $('exportCsvBtn').addEventListener('click',()=>{const rows=[['id','startedAt','dateTime','durationSeconds','duration','type','mode','topic','subtopic','problem','status','label','notes']];sessionArr().sort((a,b)=>a.startedAt-b.startedAt).forEach(s=>rows.push([s.id,s.startedAt,fmtDateTime(s.startedAt),s.durationSeconds,fmtDuration(s.durationSeconds),s.type,s.mode,s.topicName,s.subtopicName,s.problemName||'',s.status||'',s.label||'',s.notes||'']));downloadText(rows.map(r=>r.map(csvCell).join(',')).join('\n'),`dsa-journey-${dayKey(ts())}.csv`,'text/csv');});
+  $('importJsonInput').addEventListener('change',withButtonLock(null,'import-json',async e=>{const file=e.target.files?.[0];if(!file)return;try{const text=await file.text();const data=JSON.parse(text); await importBackup(data); toast('Backup merged · safety snapshot downloaded');}catch(err){console.error(err);if(err?.message!=='Import cancelled')toast(err.message||'Import failed');}e.target.value='';}));
+  window.addEventListener('online',()=>{if(store.root)flushPending();setSync(true,'Online');}); window.addEventListener('offline',()=>setSync(false,'Browser offline')); window.addEventListener('beforeunload',()=>{if(store.activeTimer)saveLocalTimer({...store.activeTimer,updatedAt:ts()});});
+
+  async function importBackup(data){
+    if(!data||typeof data!=='object')throw new Error('Invalid JSON backup');
+    if(data.curriculum&&typeof data.curriculum==='object') validateCurriculumObject(data.curriculum);
+    if(data.sessions&&typeof data.sessions==='object') validateSessionsObject(data.sessions);
+    const curriculumTopics=data.curriculum?Object.keys(data.curriculum).length:0;
+    const sessionCount=data.sessions?Object.keys(data.sessions).length:0;
+    const ok=await askConfirm(
+      'Merge this backup into your live data?',
+      `This will merge ${curriculumTopics} curriculum topic(s) and ${sessionCount} session(s) into your current journey (existing items with the same IDs are overwritten field-by-field; nothing else is removed). A safety snapshot of your current data downloads automatically first.`,
+      true
+    );
+    if(!ok) throw new Error('Import cancelled');
+    const safety={version:2,exportedAt:new Date().toISOString(),curriculum:store.curriculum,sessions:store.sessions,settings:{statuses:statuses()}};
+    downloadText(JSON.stringify(safety,null,2),`dsa-pre-import-${dayKey(ts())}.json`,'application/json');
+    if(data.curriculum&&typeof data.curriculum==='object')await dbUpdate(prefixObject(data.curriculum,'curriculum'));
+    if(data.sessions&&typeof data.sessions==='object')await dbUpdate(prefixObject(data.sessions,'sessions'));
+    if(data.settings?.statuses?.length)await dbSet('settings/statuses',data.settings.statuses);
+    await rebuildStatuses();
+  }
+  function prefixObject(obj,prefix){const out={};const walk=(v,path)=>{if(v&&typeof v==='object'&&!Array.isArray(v)){for(const [k,val] of Object.entries(v))walk(val,`${path}/${k}`);}else out[path]=v;};walk(obj,prefix);return out;}
+  function csvCell(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;}
+  function downloadText(text,name,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),0);}
+
+  // Explicit confirm/cancel controls for destructive actions.
+  $('confirmAction').addEventListener('click',async()=>{const fn=pendingConfirm;if(!fn)return;try{await fn();}catch(err){console.error(err);pendingResolve=null;pendingConfirm=null;closeModal('confirmModal');toast(err.message||'Action failed');}});
+  $('confirmModal').querySelectorAll('[data-close="confirmModal"]').forEach(btn=>btn.addEventListener('click',()=>resolveConfirm(false)));
+  // Clicking outside a modal closes only non-destructive modals.
+  document.querySelectorAll('.modal-backdrop').forEach(back=>back.addEventListener('click',e=>{if(e.target===back && !['stopModal','confirmModal'].includes(back.id))back.classList.remove('open');}));
+
+  function openGlobalSearch(){ openModal('searchModal'); $('globalSearchInput').value=''; runGlobalSearch(''); setTimeout(()=>$('globalSearchInput').focus(),0); }
+  $('globalSearchBtn').addEventListener('click',openGlobalSearch); $('globalSearchInput').addEventListener('input',e=>runGlobalSearch(e.target.value));
+  $('globalSearchInput').addEventListener('keydown',e=>{if(e.key==='Escape')closeModal('searchModal');});
+  $('runAuditBtn').addEventListener('click',()=>{const a=auditData();toast(a.orphan||a.invalid||a.malformed?'Audit found issues — see Data health':'Audit passed: no consistency issues found');});
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-search-kind]'); if(!b)return; if(b.dataset.searchKind==='problem'){closeModal('searchModal'); navigate('curriculum'); store.expandedTopics.add(b.dataset.tid); store.expandedSubs.add(`${b.dataset.tid}:${b.dataset.sid}`); renderCurriculum(); setTimeout(()=>{const el=document.querySelector(`[data-pid="${CSS.escape(b.dataset.pid)}"]`);el?.scrollIntoView({behavior:'smooth',block:'center'});},50);} else {closeModal('searchModal');openEditSession(b.dataset.id);} });
+  document.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openGlobalSearch();return;} if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return; const k=e.key.toLowerCase(); if(k==='n'){e.preventDefault();openSessionModal();} else if(k==='j'){e.preventDefault();navigate('timeline');} else if(k==='c'){e.preventDefault();navigate('curriculum');} else if(k==='t'){e.preventDefault();navigate('timer');} else if(k==='/'){e.preventDefault();openGlobalSearch();} });
+
+  // Read-only hook for the automated regression test suite (test/app.test.mjs) and for anyone
+  // debugging in the browser console. Exposes state and pure logic only — nothing here writes to
+  // Firebase on its own, so it is safe to leave in a shipped build.
+  if(typeof window!=='undefined'){
+    window.__DSA_APP__={
+      store, statuses, sessionArr, trashedSessionArr, topicArr, subArr, probArr, allProblems,
+      derivedStatus, calcStreak, fmtDuration, fmtDateTime, dayKey, clock, timerSeconds,
+      auditData, validateCurriculumObject, validateSessionsObject, safeUrl, buildOfficialCurriculum,
+      normalizeSeed, csvCell, reorderSiblings, SAFE_ID, renderAll, navigate,
+      createSession, deleteSession, restoreSession, saveItem, createProblem, deleteCurriculum,
+      importBackup, prefixObject
+    };
+  }
+
+  // Last-resort safety net: an uncaught error anywhere should never leave the person staring at a
+  // silently broken page with no idea what happened.
+  window.addEventListener('error',e=>{ console.error('Uncaught error:',e.error||e.message); toast('Something went wrong. Your data is unaffected — try again.'); });
+  window.addEventListener('unhandledrejection',e=>{ console.error('Unhandled rejection:',e.reason); toast((e.reason&&e.reason.message)||'Something went wrong. Your data is unaffected — try again.'); });
+
+  init();
+})();
+</script>
+</body>
+</html>
